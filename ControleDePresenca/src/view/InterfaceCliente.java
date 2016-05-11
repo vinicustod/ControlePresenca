@@ -1,6 +1,7 @@
 package view;
 
 import communication.ClientCommunication;
+import communication.Session;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -148,7 +149,10 @@ public class InterfaceCliente extends javax.swing.JFrame {
             System.out.println("Interface Send");
             System.out.println(cliente);
             if (getCliente() == null) {
-                setCliente(new ClientCommunication(this, Integer.parseInt(this.jtServerPort.getText()), this.jtServerIp.getText()));
+                // Initiate a new session
+                //Session newSession = new Session(true);
+                
+                setCliente(new ClientCommunication(this, Integer.parseInt(this.jtServerPort.getText()), this.jtServerIp.getText()) );
                 if (getCliente().createConnection()) {
                     getCliente().start();
                     getCliente().sendMessage("01;" + jtUsername.getText() + ";" + jtPassword.getText());

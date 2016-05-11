@@ -5,18 +5,31 @@
  */
 package view;
 
+import communication.Session;
+import java.util.Observable;
+import java.util.Observer;
+
 /**
  *
  * @author viniciuscustodio
  */
-public class InterfaceMenu extends javax.swing.JFrame {
+public class InterfaceMenu extends javax.swing.JFrame implements Observer{
     private static InterfaceMenu menu = null;
     
-    public static void createMenu(){
+    private Session session;
+    
+    public static void createMenu(Session session){
         if(menu == null){
             menu = new InterfaceMenu();
         }
+        
         menu.setVisible(true);
+        menu.session = session;
+        // Add this object to the list of Observer of session - Check to not duplicate
+        menu.session.deleteObserver(menu);
+        menu.session.addObserver(menu);
+        
+        session.setConnection(true);
     }
     /**
      * Creates new form InterfaceMenu
@@ -83,6 +96,17 @@ public class InterfaceMenu extends javax.swing.JFrame {
                 new InterfaceMenu().setVisible(true);
             }
         });
+    }
+
+    // The current session was updated 
+    @Override
+    public void update(Observable o, Object arg) {
+        
+        // Verify if the updated Observable class is Session
+
+        Session newSession = (Session) o;
+        System.out.println("InterfaceMenu Update " + newSession.isConnection());
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

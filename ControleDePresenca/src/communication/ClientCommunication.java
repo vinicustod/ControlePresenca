@@ -3,13 +3,15 @@ package communication;
 import view.InterfaceCliente;
 import java.io.*;
 import java.net.*;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import view.InterfaceMenu;
 
 // Devo ser
-public class ClientCommunication extends Thread {
+public class ClientCommunication extends Thread implements Observer{
 
     static DataInputStream in;                  // cria um duto de entrada
     static PrintStream out;                     // cria um duto de saída
@@ -18,19 +20,31 @@ public class ClientCommunication extends Thread {
     int serverPort;
     String ipServer;
     InterfaceCliente iCliente;
+    
+    private final Session session = new Session(true);
 
     public ClientCommunication(InterfaceCliente iCliente, int port, String ipServer) {
         this.serverPort = port;
         this.ipServer = ipServer;
         this.iCliente = iCliente;
+        
+        // Add this object to the list of Observer of session - Check to not duplicate
+        session.deleteObserver(ClientCommunication.this);
+        session.addObserver(ClientCommunication.this);
+        
     }
 
+    @Override
     public void run() {
         while (true) {
             try {
                 message = in.readLine();
                 System.out.println(message);
                 if (message == null) {
+                    
+                    // Alert to the observers that the session is over
+                    this.session.setConnection(false);
+            
                     ClientSocket = null;
                     iCliente.setCliente(null);
                     this.stop();
@@ -41,7 +55,9 @@ public class ClientCommunication extends Thread {
                     if ("02".equals(splitMessage[0])) {
                         if (splitMessage.length == 2) {
                             if ("1".equals(splitMessage[1])) {
-                                InterfaceMenu.createMenu();
+                                // Envia a interface atual
+                                InterfaceMenu.createMenu(session);
+                                
                                 iCliente.setVisible(false);
                             } else {
                                 iCliente.wrongUserPassword();
@@ -66,6 +82,10 @@ public class ClientCommunication extends Thread {
 
     public int closeConnection() {
         try {
+            
+            // Alert to the observers that the session is over
+            this.session.setConnection(false);
+            
             ClientSocket.close();
             ClientSocket = null;
             iCliente.setCliente(null);
@@ -128,6 +148,16 @@ public class ClientCommunication extends Thread {
         } catch (Exception ex) {
             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+    }
+
+    
+    // 
+    @Override
+    public void update(Observable o, Object arg) {
+        // Verify if the updated Observable class is Session
+        Session newSession = (Session) o;
+        System.out.println("ClientCommunication Update " + newSession.isConnection());
 
     }
 }
