@@ -5,7 +5,8 @@
  */
 package view;
 
-import communication.Session;
+import communication.client.ClientCommunication;
+import communication.client.Session;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -14,15 +15,16 @@ import java.util.Observer;
  * @author viniciuscustodio
  */
 public class InterfaceMenu extends javax.swing.JFrame implements Observer{
-    private static InterfaceMenu menu = null;
-    
+    private static InterfaceMenu menu = null;    
     private Session session;
+    ClientCommunication client = null;
     
-    public static void createMenu(Session session){
+    public static void createMenu(Session session, ClientCommunication client){
         if(menu == null){
             menu = new InterfaceMenu();
+            menu.client = client;
         }
-        
+        System.out.println("menu visivel");
         menu.setVisible(true);
         menu.session = session;
         // Add this object to the list of Observer of session - Check to not duplicate
@@ -47,21 +49,40 @@ public class InterfaceMenu extends javax.swing.JFrame implements Observer{
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jButton1.setText("Evento");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton1)
+                .addContainerGap(308, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(jButton1)
+                .addContainerGap(250, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        InterfaceCadastrarEvento.createEvento(client);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -110,5 +131,6 @@ public class InterfaceMenu extends javax.swing.JFrame implements Observer{
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     // End of variables declaration//GEN-END:variables
 }

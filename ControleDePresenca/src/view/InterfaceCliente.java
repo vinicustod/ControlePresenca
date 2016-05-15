@@ -1,7 +1,7 @@
 package view;
 
-import communication.ClientCommunication;
-import communication.Session;
+import communication.client.ClientCommunication;
+import communication.client.Session;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,13 +17,14 @@ import javax.swing.JOptionPane;
  * @author viniciuscustodio
  */
 public class InterfaceCliente extends javax.swing.JFrame {
-    private static InterfaceCliente login = null;
-            
+    public static InterfaceCliente login = null;
+    
     public static void createLogin(){
         if(login == null){
             login = new InterfaceCliente();
         }
         login.setVisible(true);
+        
     }
     
     private ClientCommunication cliente;
@@ -33,6 +34,7 @@ public class InterfaceCliente extends javax.swing.JFrame {
      */
     public InterfaceCliente() {
         initComponents();
+        login = this;
     }
 
     /**
@@ -182,8 +184,9 @@ public class InterfaceCliente extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jtServerIpActionPerformed
 
-    public void wrongUserPassword(){
-        JOptionPane.showMessageDialog(rootPane, "Senha ou usuario incorreto", "Erro", JOptionPane.WARNING_MESSAGE);
+    public static void wrongUserPassword(){
+        InterfaceCliente.login.cliente = null;
+        JOptionPane.showMessageDialog(null, "Senha ou usuario incorreto", "Erro", JOptionPane.WARNING_MESSAGE);
     }
     /**
      * @param args the command line arguments

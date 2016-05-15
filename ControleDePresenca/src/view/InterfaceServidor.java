@@ -1,7 +1,7 @@
 package view;
 
 
-import communication.ServerManager;
+import communication.server.ServerManager;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.logging.Level;
