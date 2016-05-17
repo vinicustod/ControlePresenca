@@ -19,6 +19,7 @@ public class VOHelper {
         Evento e = new Evento();
         
         e.setIdEvento(idEvento);
+        e.setNome(nome);
         e.setDate(date);
         e.setHoraInicial(horaInicial);
         e.setHoraFinal(horaFinal);

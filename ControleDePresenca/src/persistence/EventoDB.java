@@ -49,4 +49,51 @@ public class EventoDB {
         }
         return results;
     }
+
+    public static boolean alterEvent(Evento evento) {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        EntityTransaction trans = em.getTransaction();
+        trans.begin();
+        try {
+            
+            Evento queryEvento = em.find(Evento.class, evento.getIdEvento());
+ 
+            
+            queryEvento.setNome(evento.getNome());
+            queryEvento.setDate(evento.getDate()); 
+            queryEvento.setHoraInicial(evento.getHoraInicial()); 
+            queryEvento.setHoraFinal(evento.getHoraFinal()); 
+            queryEvento.setTipo(evento.getTipo());  
+            
+            trans.commit();
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        } finally {
+            em.close();
+        }
+        return true;
+    }
+
+    public static boolean deleteEvent(Evento evento) {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        EntityTransaction trans = em.getTransaction();
+        trans.begin();
+        
+        try {
+            
+            Evento queryEvento = em.find(Evento.class, evento.getIdEvento());
+ 
+            
+            em.remove(queryEvento);
+            
+            trans.commit();
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        } finally {
+            em.close();
+        }
+        return true;
+    }
 }

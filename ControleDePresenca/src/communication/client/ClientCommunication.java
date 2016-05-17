@@ -9,6 +9,7 @@ import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
@@ -118,7 +119,8 @@ public class ClientCommunication extends Thread implements Observer {
     public void sendMessage(String message) {
         try {
             out.println(message);
-            System.out.println("mensagem enviada");
+            System.out.println("mensagem enviada  " + message);
+            
         } catch (Exception ex) {
             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -130,7 +132,7 @@ public class ClientCommunication extends Thread implements Observer {
     public void update(Observable o, Object arg) {
         // Verify if the updated Observable class is Session
         Session newSession = (Session) o;
-        System.out.println("ClientCommunication Update " + newSession.isConnection());
+        //System.out.println("ClientCommunication Update " + newSession.isConnection());
 
     }
 
@@ -141,7 +143,11 @@ public class ClientCommunication extends Thread implements Observer {
             if ("02".equals(splitMessage[0])) {
                 loginResponse(splitMessage);
             } else if ("12".equals(splitMessage[0])) {
-                insertResponse(splitMessage);
+                queryResponse(splitMessage, "insert");
+            } else if ("14".equals(splitMessage[0])) {
+                queryResponse(splitMessage, "alter");
+            } else if ("16".equals(splitMessage[0])) {
+                queryResponse(splitMessage, "delete");
             } else if ("00".equals(splitMessage[0])) {
                 System.out.println("Erro: " + splitMessage[1]);
             }
@@ -177,21 +183,23 @@ public class ClientCommunication extends Thread implements Observer {
 
     private void listEventsResponse(String[] message) {
         ArrayList<Evento> eventos = new ArrayList();
+        
         for (int i = 1; i < message.length; i++) {
             String[] event = message[i].split(";");
             Evento e = VOHelper.createEvento(Long.parseLong(event[0]), event[1], event[2], event[3], event[4], event[5]);
             eventos.add(e);
         }
-        InterfaceCadastrarEvento.createEvento(this);
+        //InterfaceCadastrarEvento.createEvento(this);
         InterfaceCadastrarEvento.evento.setInTable(eventos);
+        
     }
 
-    private void insertResponse(String[] message) {
+    private void queryResponse(String[] message, String type) {
         if (message.length == 2) {
             if ("1".equals(message[1])) {
-                InterfaceCadastrarEvento.cadastrar(true);
+                InterfaceCadastrarEvento.query(true, type);
             } else {
-                InterfaceCadastrarEvento.cadastrar(false);
+                InterfaceCadastrarEvento.query(false, type);
             }
         }
     }

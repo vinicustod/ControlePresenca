@@ -126,7 +126,7 @@ public class InterfaceMenu extends javax.swing.JFrame implements Observer{
         // Verify if the updated Observable class is Session
 
         Session newSession = (Session) o;
-        System.out.println("InterfaceMenu Update " + newSession.isConnection());
+        //System.out.println("InterfaceMenu Update " + newSession.isConnection());
 
     }
 

@@ -10,6 +10,7 @@ import communication.client.ClientCommunication;
 import communication.client.Session;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -18,20 +19,43 @@ import javax.swing.JOptionPane;
 public class InterfaceCadastrarEvento extends javax.swing.JFrame {
     ArrayList<Evento> eventos = null;
     ClientCommunication client = null;
+    
+    private Evento selectedEvent;
+    
     public static InterfaceCadastrarEvento evento = null;
     /**
      * Creates new form InterfaceCadastrarEvento
+     * @param eventos
      */
     public void setInTable(ArrayList<Evento> eventos) {
+
         this.eventos = eventos;
         System.out.println("eventos recebidos");
+        
+        
+        // Atualizando a tabela
+        DefaultTableModel modelEventos = (DefaultTableModel) jTEventos.getModel();
+        modelEventos.setRowCount(0);
+        
+        eventos.stream().forEach((ev) -> {
+            modelEventos.addRow(new Object[]{
+                ev.getIdEvento(), ev.getNome(), ev.getDate(), 
+                ev.getHoraInicial(), ev.getHoraFinal(), ev.getTipo()
+            });
+        });
+        
+        
+        
     }
     
-    private void inicializar(){
+    private void updateTable(){
+        //System.out.println("InterfaceCadastrarEvento atualizando");
         client.sendMessage("17");
     }
     
     public InterfaceCadastrarEvento() {
+        this.selectedEvent = null;
+        
         initComponents();
     }
 
@@ -39,10 +63,12 @@ public class InterfaceCadastrarEvento extends javax.swing.JFrame {
     public static void createEvento(ClientCommunication client){
         if(evento == null){
             evento = new InterfaceCadastrarEvento();
-            evento.client = client;
         }
         
         evento.setVisible(true);
+        evento.client = client;
+        
+        evento.updateTable();
 
     }
     /**
@@ -65,7 +91,7 @@ public class InterfaceCadastrarEvento extends javax.swing.JFrame {
         jtFinalHour = new javax.swing.JTextField();
         jtCadastrar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTEventos = new javax.swing.JTable();
         jtAlterar = new javax.swing.JButton();
         jtDeletar = new javax.swing.JButton();
         jcbTypeEvent = new javax.swing.JComboBox<>();
@@ -91,7 +117,7 @@ public class InterfaceCadastrarEvento extends javax.swing.JFrame {
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTEventos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -110,7 +136,12 @@ public class InterfaceCadastrarEvento extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jTEventos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTEventosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTEventos);
 
         jtAlterar.setText("Alterar");
         jtAlterar.addActionListener(new java.awt.event.ActionListener() {
@@ -215,17 +246,54 @@ public class InterfaceCadastrarEvento extends javax.swing.JFrame {
 
     private void jtAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtAlterarActionPerformed
         // TODO add your handling code here:
+        if(client != null){
+            if(selectedEvent != null) {
+                client.sendMessage("13;" + selectedEvent.getIdEvento() + ";" + jtNome.getText() + ";" + jtDate.getText() + ";" + jtInitialHour.getText() + ";" + jtFinalHour.getText() + ";" + jcbTypeEvent.getSelectedItem().toString());
+            }
+        }
     }//GEN-LAST:event_jtAlterarActionPerformed
 
     private void jtDeletarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jtDeletarActionPerformed
         // TODO add your handling code here:
+        if(client != null){
+            if(selectedEvent != null) {
+                client.sendMessage("15;" + selectedEvent.getIdEvento() );
+            }
+        }
     }//GEN-LAST:event_jtDeletarActionPerformed
 
-    public static void cadastrar(Boolean bool){
+    private void jTEventosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTEventosMouseClicked
+        int selection = jTEventos.getSelectedRow();
+        
+        this.selectedEvent = this.eventos.get(selection);
+        
+        
+        jtNome.setText(selectedEvent.getNome());
+        jtDate.setText(selectedEvent.getDate());
+        jtInitialHour.setText(selectedEvent.getHoraInicial());
+        jtFinalHour.setText(selectedEvent.getHoraFinal());
+        jcbTypeEvent.setSelectedItem(selectedEvent.getTipo());
+        
+    }//GEN-LAST:event_jTEventosMouseClicked
+
+    public static void query(Boolean bool, String type){
+        
+        String title = "";
+        if(type.equals("insert"))
+            title = "Cadastro";
+        else if(type.equals("alter")){
+            title = "Modificação";
+        }
+        else if(type.equals("delete")){
+            title = "Exclusão";
+        }
+        
+        evento.updateTable();
+            
         if(bool){
-            JOptionPane.showMessageDialog(null, "Evento cadastrado com sucesso", "Cadastro", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, title +  " de Evento realizado(a) com sucesso. ", title, JOptionPane.INFORMATION_MESSAGE);
         }else{
-            JOptionPane.showMessageDialog(null, "Não foi possível cadastrar o evento", "Cadastro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, title +  " não realizado(a). ", title, JOptionPane.ERROR_MESSAGE);
         }
     }
     /**
@@ -270,7 +338,7 @@ public class InterfaceCadastrarEvento extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTEventos;
     private javax.swing.JComboBox<String> jcbTypeEvent;
     private javax.swing.JButton jtAlterar;
     private javax.swing.JButton jtCadastrar;

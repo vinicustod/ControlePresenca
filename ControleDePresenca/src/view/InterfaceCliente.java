@@ -81,6 +81,8 @@ public class InterfaceCliente extends javax.swing.JFrame {
             }
         });
 
+        jtUsername.setText("usuario");
+
         jlUsername.setText("Username:");
 
         jbSend.setText("Enviar");
@@ -89,6 +91,8 @@ public class InterfaceCliente extends javax.swing.JFrame {
                 jbSendActionPerformed(evt);
             }
         });
+
+        jtPassword.setText("senha");
 
         jlPassword.setText("Password:");
 

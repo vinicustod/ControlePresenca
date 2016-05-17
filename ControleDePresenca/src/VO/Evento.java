@@ -112,4 +112,11 @@ public class Evento {
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
+    
+    
+    @Override
+    public String toString(){
+        return this.idEvento + " " + this.nome + " " +  this.date + " " + 
+                this.horaInicial + " " + this.horaFinal + " " + this.tipo;
+    }
 }
