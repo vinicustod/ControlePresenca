@@ -14,14 +14,14 @@ import java.util.Observer;
  *
  * @author viniciuscustodio
  */
-public class InterfaceMenu extends javax.swing.JFrame implements Observer{
-    private static InterfaceMenu menu = null;    
+public class FormMenu extends javax.swing.JFrame implements Observer{
+    private static FormMenu menu = null;    
     private Session session;
     ClientCommunication client = null;
     
     public static void createMenu(Session session, ClientCommunication client){
         if(menu == null){
-            menu = new InterfaceMenu();
+            menu = new FormMenu();
             menu.client = client;
         }
         System.out.println("menu visivel");
@@ -36,7 +36,7 @@ public class InterfaceMenu extends javax.swing.JFrame implements Observer{
     /**
      * Creates new form InterfaceMenu
      */
-    public InterfaceMenu() {
+    public FormMenu() {
         initComponents();
     }
 
@@ -81,7 +81,7 @@ public class InterfaceMenu extends javax.swing.JFrame implements Observer{
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        InterfaceCadastrarEvento.createEvento(client);
+        FormEvento.createEvento(client);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -101,20 +101,21 @@ public class InterfaceMenu extends javax.swing.JFrame implements Observer{
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(InterfaceMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(InterfaceMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(InterfaceMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(InterfaceMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new InterfaceMenu().setVisible(true);
+                new FormMenu().setVisible(true);
             }
         });
     }
@@ -126,7 +127,7 @@ public class InterfaceMenu extends javax.swing.JFrame implements Observer{
         // Verify if the updated Observable class is Session
 
         Session newSession = (Session) o;
-        //System.out.println("InterfaceMenu Update " + newSession.isConnection());
+        //System.out.println("FormMenu Update " + newSession.isConnection());
 
     }
 

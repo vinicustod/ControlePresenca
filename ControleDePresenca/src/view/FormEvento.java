@@ -16,15 +16,15 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author viniciuscustodio
  */
-public class InterfaceCadastrarEvento extends javax.swing.JFrame {
+public class FormEvento extends javax.swing.JFrame {
     ArrayList<Evento> eventos = null;
     ClientCommunication client = null;
     
     private Evento selectedEvent;
     
-    public static InterfaceCadastrarEvento evento = null;
+    public static FormEvento evento = null;
     /**
-     * Creates new form InterfaceCadastrarEvento
+     * Creates new form FormEvento
      * @param eventos
      */
     public void setInTable(ArrayList<Evento> eventos) {
@@ -49,11 +49,11 @@ public class InterfaceCadastrarEvento extends javax.swing.JFrame {
     }
     
     private void updateTable(){
-        //System.out.println("InterfaceCadastrarEvento atualizando");
+        //System.out.println("FormEvento atualizando");
         client.sendMessage("17");
     }
     
-    public InterfaceCadastrarEvento() {
+    public FormEvento() {
         this.selectedEvent = null;
         
         initComponents();
@@ -62,7 +62,7 @@ public class InterfaceCadastrarEvento extends javax.swing.JFrame {
     
     public static void createEvento(ClientCommunication client){
         if(evento == null){
-            evento = new InterfaceCadastrarEvento();
+            evento = new FormEvento();
         }
         
         evento.setVisible(true);
@@ -96,7 +96,7 @@ public class InterfaceCadastrarEvento extends javax.swing.JFrame {
         jtDeletar = new javax.swing.JButton();
         jcbTypeEvent = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setText("Nome:");
 
@@ -313,20 +313,21 @@ public class InterfaceCadastrarEvento extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(InterfaceCadastrarEvento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormEvento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(InterfaceCadastrarEvento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormEvento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(InterfaceCadastrarEvento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormEvento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(InterfaceCadastrarEvento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormEvento.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new InterfaceCadastrarEvento().setVisible(true);
+                new FormEvento().setVisible(true);
             }
         });
     }

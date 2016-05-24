@@ -16,12 +16,12 @@ import javax.swing.JOptionPane;
  *
  * @author viniciuscustodio
  */
-public class InterfaceCliente extends javax.swing.JFrame {
-    public static InterfaceCliente login = null;
+public class FormLogin extends javax.swing.JFrame {
+    public static FormLogin login = null;
     
     public static void createLogin(){
         if(login == null){
-            login = new InterfaceCliente();
+            login = new FormLogin();
         }
         login.setVisible(true);
         
@@ -32,7 +32,7 @@ public class InterfaceCliente extends javax.swing.JFrame {
     /**
      * Creates new form InterfaceCliente
      */
-    public InterfaceCliente() {
+    public FormLogin() {
         initComponents();
         login = this;
     }
@@ -168,7 +168,7 @@ public class InterfaceCliente extends javax.swing.JFrame {
 
             }
         } catch (IOException ex) {
-            Logger.getLogger(InterfaceCliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FormLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
         // TODO add your handling code here:
     }//GEN-LAST:event_jbSendActionPerformed
@@ -189,7 +189,7 @@ public class InterfaceCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_jtServerIpActionPerformed
 
     public static void wrongUserPassword(){
-        InterfaceCliente.login.cliente = null;
+        FormLogin.login.cliente = null;
         JOptionPane.showMessageDialog(null, "Senha ou usuario incorreto", "Erro", JOptionPane.WARNING_MESSAGE);
     }
     /**
@@ -209,20 +209,21 @@ public class InterfaceCliente extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(InterfaceCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(InterfaceCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(InterfaceCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(InterfaceCliente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormLogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new InterfaceCliente().setVisible(true);
+                new FormLogin().setVisible(true);
             }
         });
     }

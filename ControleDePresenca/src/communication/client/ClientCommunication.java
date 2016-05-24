@@ -2,7 +2,7 @@ package communication.client;
 
 import VO.Evento;
 import VO.VOHelper;
-import view.InterfaceCliente;
+import view.FormLogin;
 import java.io.*;
 import java.net.*;
 import java.sql.Time;
@@ -17,8 +17,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.eclipse.persistence.internal.jpa.metadata.accessors.classes.InterfaceAccessor;
-import view.InterfaceCadastrarEvento;
-import view.InterfaceMenu;
+import view.FormEvento;
+import view.FormMenu;
 
 // Devo ser
 public class ClientCommunication extends Thread implements Observer {
@@ -29,11 +29,11 @@ public class ClientCommunication extends Thread implements Observer {
     Socket ClientSocket = null;
     int serverPort;
     String ipServer;
-    InterfaceCliente iCliente;
+    FormLogin iCliente;
 
     private final Session session = new Session(true);
 
-    public ClientCommunication(InterfaceCliente iCliente, int port, String ipServer) {
+    public ClientCommunication(FormLogin iCliente, int port, String ipServer) {
         this.serverPort = port;
         this.ipServer = ipServer;
         this.iCliente = iCliente;
@@ -160,10 +160,10 @@ public class ClientCommunication extends Thread implements Observer {
         if (message.length == 2) {
             if ("1".equals(message[1])) {
                 System.out.println("pronto");
-                InterfaceMenu.createMenu(session, this);
-                InterfaceCliente.login.setVisible(false);
+                FormMenu.createMenu(session, this);
+                FormLogin.login.setVisible(false);
             } else {
-                InterfaceCliente.wrongUserPassword();
+                FormLogin.wrongUserPassword();
                 this.closeConnection();
             }
         }
@@ -190,16 +190,16 @@ public class ClientCommunication extends Thread implements Observer {
             eventos.add(e);
         }
         //InterfaceCadastrarEvento.createEvento(this);
-        InterfaceCadastrarEvento.evento.setInTable(eventos);
+        FormEvento.evento.setInTable(eventos);
         
     }
 
     private void queryResponse(String[] message, String type) {
         if (message.length == 2) {
             if ("1".equals(message[1])) {
-                InterfaceCadastrarEvento.query(true, type);
+                FormEvento.query(true, type);
             } else {
-                InterfaceCadastrarEvento.query(false, type);
+                FormEvento.query(false, type);
             }
         }
     }

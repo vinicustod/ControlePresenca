@@ -2,7 +2,7 @@ package communication.server;
 
 
 
-import view.InterfaceServidor;
+import view.FormServidor;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -23,11 +23,11 @@ public class ServerManager extends Thread {
  
 
     int porta;
-    static InterfaceServidor iServer;
+    static FormServidor iServer;
     private static ServerSocket serverSocket = null;
     ArrayList<Thread> athreads = new ArrayList();
 
-    public ServerManager(InterfaceServidor iServer, int portaServidor) {
+    public ServerManager(FormServidor iServer, int portaServidor) {
         this.porta = portaServidor;
         this.iServer = iServer;
     }
