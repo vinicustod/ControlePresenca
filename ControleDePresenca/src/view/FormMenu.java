@@ -50,6 +50,7 @@ public class FormMenu extends javax.swing.JFrame implements Observer{
     private void initComponents() {
 
         jButton1 = new javax.swing.JButton();
+        jbAluno = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,13 +61,22 @@ public class FormMenu extends javax.swing.JFrame implements Observer{
             }
         });
 
+        jbAluno.setText("Aluno");
+        jbAluno.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbAlunoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1)
+                    .addComponent(jbAluno))
                 .addContainerGap(308, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -74,7 +84,9 @@ public class FormMenu extends javax.swing.JFrame implements Observer{
             .addGroup(layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(jButton1)
-                .addContainerGap(250, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jbAluno)
+                .addContainerGap(203, Short.MAX_VALUE))
         );
 
         pack();
@@ -83,6 +95,11 @@ public class FormMenu extends javax.swing.JFrame implements Observer{
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         FormEvento.createEvento(client);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jbAlunoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAlunoActionPerformed
+        FormAluno.createAluno(client);
+// TODO add your handling code here:
+    }//GEN-LAST:event_jbAlunoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -133,5 +150,6 @@ public class FormMenu extends javax.swing.JFrame implements Observer{
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jbAluno;
     // End of variables declaration//GEN-END:variables
 }

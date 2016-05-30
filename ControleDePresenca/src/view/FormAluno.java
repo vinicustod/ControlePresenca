@@ -5,17 +5,63 @@
  */
 package view;
 
+import VO.Aluno;
+import VO.Evento;
+import communication.client.ClientCommunication;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import static view.FormEvento.evento;
+
 /**
  *
  * @author viniciuscustodio
  */
 public class FormAluno extends javax.swing.JFrame {
 
+    ClientCommunication client = null;
+    public static FormAluno aluno = null;
+    ArrayList<Aluno> alunos = null;
+    Aluno selectedStudent = null;
+
     /**
      * Creates new form FormAluno
      */
     public FormAluno() {
         initComponents();
+    }
+
+    public static void createAluno(ClientCommunication client) {
+        if (aluno == null) {
+            aluno = new FormAluno();
+        }
+
+        aluno.setVisible(true);
+        aluno.client = client;
+
+        aluno.updateTable();
+    }
+
+    public void setInTable(ArrayList<Aluno> alunos) {
+
+        this.alunos = alunos;
+        System.out.println("eventos recebidos");
+
+        // Atualizando a tabela
+        DefaultTableModel modelEventos = (DefaultTableModel) jTableAlunos.getModel();
+        modelEventos.setRowCount(0);
+
+        alunos.stream().forEach((al) -> {
+            modelEventos.addRow(new Object[]{
+                al.getRa(), al.getNome(), al.getCurso(),
+                al.getEmail(), al.getPeriodo(), al.getTelefone()
+            });
+        });
+
+    }
+
+    public void updateTable() {
+        client.sendMessage("27");
     }
 
     /**
@@ -38,14 +84,14 @@ public class FormAluno extends javax.swing.JFrame {
         jlEmail = new javax.swing.JLabel();
         jtEmail = new javax.swing.JTextField();
         jlPhone = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        jtTelefone = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableAlunos = new javax.swing.JTable();
         jbRegister = new javax.swing.JButton();
         jbUpdate = new javax.swing.JButton();
         jbDelete = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jlAcademicRegistry.setText("RA: ");
 
@@ -69,9 +115,9 @@ public class FormAluno extends javax.swing.JFrame {
 
         jlPhone.setText("Telefone:");
 
-        jTextField1.setText("(42) 8425-9609");
+        jtTelefone.setText("(42) 8425-9609");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableAlunos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -90,14 +136,34 @@ public class FormAluno extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jTable1);
+        jTableAlunos.getTableHeader().setReorderingAllowed(false);
+        jTableAlunos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableAlunosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTableAlunos);
 
         jbRegister.setText("Cadastrar");
+        jbRegister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbRegisterActionPerformed(evt);
+            }
+        });
 
         jbUpdate.setText("Alterar");
+        jbUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbUpdateActionPerformed(evt);
+            }
+        });
 
         jbDelete.setText("Deletar");
+        jbDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbDeleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -122,7 +188,7 @@ public class FormAluno extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jlPhone)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jlPeriod)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -174,17 +240,86 @@ public class FormAluno extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jlPhone)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jbRegister)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jbUpdate)
-                    .addComponent(jbDelete))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jbRegister)
+                        .addComponent(jbDelete)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jbRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbRegisterActionPerformed
+        if (client != null) {
+            String toSend = "21;" + jtAcademicRegistry.getText()
+                    + ";" + jtName.getText()
+                    + ";" + jcbCourse.getSelectedItem().toString()
+                    + ";" + jcbPeriod.getSelectedItem().toString()
+                    + ";" + jtEmail.getText()
+                    + ";" + jtTelefone.getText();
+            client.sendMessage(toSend);
+        }
+    }//GEN-LAST:event_jbRegisterActionPerformed
+
+    private void jTableAlunosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableAlunosMouseClicked
+        int selection = jTableAlunos.getSelectedRow();
+
+        this.selectedStudent = this.alunos.get(selection);
+
+        jtAcademicRegistry.setText("" + selectedStudent.getRa());
+        jtName.setText(selectedStudent.getNome());
+        jtEmail.setText(selectedStudent.getEmail());
+        jtTelefone.setText(selectedStudent.getTelefone());
+        jcbCourse.setSelectedItem(selectedStudent.getCurso());
+        jcbPeriod.setSelectedItem("" + selectedStudent.getPeriodo());
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTableAlunosMouseClicked
+
+    private void jbUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbUpdateActionPerformed
+        if(client != null){
+            if(selectedStudent != null) {
+                String toSend = "23;" + selectedStudent.getIdAluno()
+                    + ";" + jtAcademicRegistry.getText()
+                    + ";" + jtName.getText()
+                    + ";" + jcbCourse.getSelectedItem().toString()
+                    + ";" + jcbPeriod.getSelectedItem().toString()
+                    + ";" + jtEmail.getText()
+                    + ";" + jtTelefone.getText();
+                client.sendMessage(toSend);
+            }
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_jbUpdateActionPerformed
+
+    private void jbDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbDeleteActionPerformed
+        if(client != null){
+            if(selectedStudent != null) {
+                client.sendMessage("25;" + selectedStudent.getIdAluno() );
+            }
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jbDeleteActionPerformed
+
+    public static void query(boolean bool, String type) {
+        String title = "";
+        if (type.equals("insert")) {
+            title = "Cadastro";
+        } else if (type.equals("alter")) {
+            title = "Modificação";
+        } else if (type.equals("delete")) {
+            title = "Exclusão";
+        }
+
+        aluno.updateTable();
+        if (bool) {
+            JOptionPane.showMessageDialog(null, title + " de Aluno realizado(a) com sucesso. ", title, JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, title + " não realizado(a). ", title, JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -223,8 +358,7 @@ public class FormAluno extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTable jTableAlunos;
     private javax.swing.JButton jbDelete;
     private javax.swing.JButton jbRegister;
     private javax.swing.JButton jbUpdate;
@@ -239,5 +373,6 @@ public class FormAluno extends javax.swing.JFrame {
     private javax.swing.JTextField jtAcademicRegistry;
     private javax.swing.JTextField jtEmail;
     private javax.swing.JTextField jtName;
+    private javax.swing.JTextField jtTelefone;
     // End of variables declaration//GEN-END:variables
 }

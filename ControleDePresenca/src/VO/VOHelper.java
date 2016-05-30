@@ -27,4 +27,21 @@ public class VOHelper {
         
         return e;
     }
+    
+//    public static Aluno createAluno(){
+//        return new Aluno();
+//    }
+
+    public static Aluno createStudent(long idAluno, String academicRegistry, String nome, String curso, String periodo, String email, String telefone) {
+        Aluno a = new Aluno();
+        a.setIdAluno(idAluno);
+        a.setRa(Integer.parseInt(academicRegistry));
+        a.setNome(nome);
+        a.setCurso(curso);
+        a.setPeriodo(Integer.parseInt(periodo));
+        a.setEmail(email);
+        a.setTelefone(telefone);
+        
+        return a;
+    }
 }

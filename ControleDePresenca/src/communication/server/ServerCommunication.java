@@ -2,8 +2,10 @@ package communication.server;
 
 // servidor de eco
 // recebe uma linha e ecoa a linha recebida.
+import VO.Aluno;
 import VO.Evento;
 import VO.Usuario;
+import VO.VOHelper;
 import java.io.*;
 import java.net.*;
 import java.sql.Time;
@@ -14,8 +16,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import persistence.AlunoDB;
 import persistence.EventoDB;
 import persistence.UsuarioDB;
+import view.FormServidor;
 
 public class ServerCommunication extends Thread {
 
@@ -26,11 +30,13 @@ public class ServerCommunication extends Thread {
     PrintStream dutoSaida;                  // cria um duto de saída
     int portaServidor;
     String answer = "";
+    private FormServidor iServer;
 
-    public ServerCommunication(Socket socketCliente, ServerSocket server, int porta) {
+    public ServerCommunication(Socket socketCliente, ServerSocket server, int porta, FormServidor iServer) {
         this.socketCliente = socketCliente;
         this.portaServidor = porta;
         this.serverSocket = server;
+        this.iServer = iServer;
     }
 
     public void closingServer() {
@@ -51,15 +57,15 @@ public class ServerCommunication extends Thread {
             while (true) {
                 //aguarda recebimento de dados vindos do cliente
                 message = dutoEntrada.readLine();                           // recebe dados do cliente
-                ServerManager.iServer.getJtMessage().setText(ServerManager.iServer.getJtMessage().getText() + "\n" + message);
+                iServer.getJtMessage().setText(iServer.getJtMessage().getText() + "\n" + message);
                 //System.out.println(message);
                 if (message == null) {
-                    ServerManager.iServer.getJtMessage().setText(ServerManager.iServer.getJtMessage().getText() + "\n"
+                    iServer.getJtMessage().setText(iServer.getJtMessage().getText() + "\n"
                             + "Cliente: " + socketCliente.getInetAddress().toString() + ":" + socketCliente.getPort() + " desconectou.");
                     socketCliente.close();
                     this.stop();
                 } else {
-                    System.out.println("mensagem recebida = " + message);
+                    //System.out.println("mensagem recebida = " + message);
                     analyzeMessage(message.split(";"));
                 }
             }
@@ -76,10 +82,18 @@ public class ServerCommunication extends Thread {
         } else if ("13".equals(message[0])) {
             alterEventRequest(message);
         } else if ("15".equals(message[0])) {
-            System.out.println("message 15");
+            //System.out.println("message 15");
             deleteEventRequest(message);
         } else if ("17".equals(message[0])) {
-            createEventList(message);
+            createEventList();
+        } else if ("21".equals(message[0])) {
+            createStudentRequest(message);
+        } else if ("23".equals(message[0])) {
+            alterStudentRequest(message);
+        } else if ("25".equals(message[0])){
+            deleteStudentRequest(message);
+        }else if ("27".equals(message[0])) {
+            createStudentList();
         } else {
             dutoSaida.println("00;Mensagem Invalida");
         }
@@ -126,7 +140,7 @@ public class ServerCommunication extends Thread {
             dutoSaida.println("12;0");
         }
     }
-    
+
     private void alterEventRequest(String[] message) {
         if (message.length == 7) {
             Evento e = new Evento();
@@ -145,7 +159,7 @@ public class ServerCommunication extends Thread {
             dutoSaida.println("14;0");
         }
     }
-    
+
     private void deleteEventRequest(String[] message) {
         if (message.length == 2) {
             Evento e = new Evento();
@@ -159,8 +173,18 @@ public class ServerCommunication extends Thread {
             dutoSaida.println("16;0");
         }
     }
-    
-    
+
+    private void createEventList() {
+
+        String listEventsString = "18";
+        List<Evento> eventos = EventoDB.selectProducts();
+        for (Evento e : eventos) {
+            String evento = e.getIdEvento() + ";" + e.getNome() + ";" + e.getDate() + ";" + e.getHoraInicial() + ";" + e.getHoraFinal() + ";" + e.getTipo();
+            listEventsString = listEventsString + "|" + evento;
+        }
+        //System.out.println(listEventsString);
+        dutoSaida.println(listEventsString);
+    }
 
     private void loginRequest(String[] message) {
         if (message.length == 3) {
@@ -176,16 +200,61 @@ public class ServerCommunication extends Thread {
         }
     }
 
-    private void createEventList(String[] message) {
-        
-        String listEventsString = "18";
-        List<Evento> eventos = EventoDB.selectProducts();
-        for (Evento e : eventos) {
-            String evento = e.getIdEvento() + ";" + e.getNome() + ";" + e.getDate() + ";" + e.getHoraInicial() + ";" + e.getHoraFinal() + ";" + e.getTipo();
+    private void createStudentRequest(String[] message) {
+        if (message.length == 7) {
+            Aluno a = new Aluno();
+            a.setRa(Integer.parseInt(message[1]));
+            a.setNome(message[2]);
+            a.setCurso(message[3]);
+            a.setPeriodo(Integer.parseInt(message[4]));
+            a.setEmail(message[5]);
+            a.setTelefone(message[6]);
+            if (AlunoDB.createStudent(a)) {
+                dutoSaida.println("22;1");
+            } else {
+                dutoSaida.println("22;0");
+            }
+        } else {
+            dutoSaida.println("22;0");
+        }
+    }
+
+    private void createStudentList() {
+        String listEventsString = "28";
+        List<Aluno> alunos = AlunoDB.selectProducts();
+        for (Aluno a : alunos) {
+            String evento = a.getIdAluno() + ";" + a.getRa() + ";" + a.getNome() + ";" + a.getCurso() + ";" + a.getPeriodo() + ";" + a.getEmail() + ";" + a.getTelefone();
             listEventsString = listEventsString + "|" + evento;
         }
-        System.out.println(listEventsString);
+        //System.out.println(listEventsString);
         dutoSaida.println(listEventsString);
     }
+
+    private void alterStudentRequest(String[] message) {
+        if (message.length == 8) {
+            //Aluno a = new Aluno();
+            Aluno a = VOHelper.createStudent(Long.parseLong(message[1]), message[2], message[3],message[4], message[5], message[6], message[7]);
+            if (AlunoDB.alterAluno(a)) {
+                dutoSaida.println("24;1");
+            } else {
+                dutoSaida.println("24;0");
+            }
+        } else {
+            dutoSaida.println("24;0");
+        }
+    }
+
+    private void deleteStudentRequest(String[] message) {
+        if (message.length == 2) {
+            Aluno a = new Aluno();
+            a.setIdAluno(Long.parseLong(message[1]));
+            if (AlunoDB.deleteStudent(a)) {
+                dutoSaida.println("26;1");
+            } else {
+                dutoSaida.println("26;0");
+            }
+        } else {
+            dutoSaida.println("26;0");
+        }    }
 
 }

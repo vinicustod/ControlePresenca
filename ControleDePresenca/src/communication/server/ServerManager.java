@@ -23,7 +23,7 @@ public class ServerManager extends Thread {
  
 
     int porta;
-    static FormServidor iServer;
+    FormServidor iServer;
     private static ServerSocket serverSocket = null;
     ArrayList<Thread> athreads = new ArrayList();
 
@@ -62,7 +62,7 @@ public class ServerManager extends Thread {
 
                 socketCliente = serverSocket.accept();                         // aguarda conexão do cliente
                     System.out.println("aceitou");
-                ServerCommunication t = new ServerCommunication( socketCliente, getServerSocket(), porta);
+                ServerCommunication t = new ServerCommunication( socketCliente, getServerSocket(), porta, iServer);
                 athreads.add(t);
                 t.start();
 
