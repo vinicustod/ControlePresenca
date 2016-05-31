@@ -96,7 +96,7 @@ public class FormEvento extends javax.swing.JFrame {
         jtDeletar = new javax.swing.JButton();
         jcbTypeEvent = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText("Nome:");
 

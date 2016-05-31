@@ -25,7 +25,8 @@ import view.FormMenu;
 // Devo ser
 public class ClientCommunication extends Thread implements Observer {
 
-    static DataInputStream in;                  // cria um duto de entrada
+//    static DataInputStream in;                  // cria um duto de entrada
+    BufferedReader in;
     static PrintStream out;                     // cria um duto de saída
     static String message;
     Socket ClientSocket = null;
@@ -97,7 +98,7 @@ public class ClientCommunication extends Thread implements Observer {
                     ClientSocket = null;
                     return false;
                 }
-                in = new DataInputStream(ClientSocket.getInputStream());
+                in = new BufferedReader(new InputStreamReader(ClientSocket.getInputStream()));
                 out = new PrintStream(ClientSocket.getOutputStream());
                 System.out.println("Cliente connection");
 

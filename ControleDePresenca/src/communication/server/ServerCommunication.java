@@ -26,7 +26,9 @@ public class ServerCommunication extends Thread {
     Socket socketCliente;
     static ServerSocket serverSocket = null;
     String message = "";                        // string para conter informações transferidas
-    DataInputStream dutoEntrada;            // cria um duto de entrada
+//    DataInputStream dutoEntrada;            // cria um duto de entrada
+    BufferedReader dutoEntrada;
+
     PrintStream dutoSaida;                  // cria um duto de saída
     int portaServidor;
     String answer = "";
@@ -47,9 +49,10 @@ public class ServerCommunication extends Thread {
     public void run() {
         try {
 
-            dutoEntrada = new DataInputStream(socketCliente.getInputStream());    // aponta o duto de entrada para o socket do cliente
+//            dutoEntrada = new DataInputStream(socketCliente.getInputStream());    // aponta o duto de entrada para o socket do cliente
+            dutoEntrada = new BufferedReader(new InputStreamReader(socketCliente.getInputStream()));
             dutoSaida = new PrintStream(socketCliente.getOutputStream());       // aponta o duto de saída para o socket do cliente
-
+            //BufferedReader 
             //envia a mensagem de conexão ao cliente
 //            ServerManager.iServer.jtMessage.setText(ServerManager.iServer.jtMessage.getText() + "\n"
 //                    + "Nova conexao: " + socketCliente.getInetAddress().toString() + ":" + socketCliente.getPort());
@@ -90,9 +93,9 @@ public class ServerCommunication extends Thread {
             createStudentRequest(message);
         } else if ("23".equals(message[0])) {
             alterStudentRequest(message);
-        } else if ("25".equals(message[0])){
+        } else if ("25".equals(message[0])) {
             deleteStudentRequest(message);
-        }else if ("27".equals(message[0])) {
+        } else if ("27".equals(message[0])) {
             createStudentList();
         } else {
             dutoSaida.println("00;Mensagem Invalida");
@@ -233,7 +236,7 @@ public class ServerCommunication extends Thread {
     private void alterStudentRequest(String[] message) {
         if (message.length == 8) {
             //Aluno a = new Aluno();
-            Aluno a = VOHelper.createStudent(Long.parseLong(message[1]), message[2], message[3],message[4], message[5], message[6], message[7]);
+            Aluno a = VOHelper.createStudent(Long.parseLong(message[1]), message[2], message[3], message[4], message[5], message[6], message[7]);
             if (AlunoDB.alterAluno(a)) {
                 dutoSaida.println("24;1");
             } else {
@@ -255,6 +258,7 @@ public class ServerCommunication extends Thread {
             }
         } else {
             dutoSaida.println("26;0");
-        }    }
+        }
+    }
 
 }

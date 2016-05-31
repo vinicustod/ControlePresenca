@@ -24,6 +24,7 @@ public class AlunoDB {
         EntityTransaction trans = em.getTransaction();
         trans.begin();
         try {
+            System.out.println(aluno.getCurso());
             em.persist(aluno);
             trans.commit();
         } catch (Exception e) {

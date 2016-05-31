@@ -1,0 +1,27 @@
+Equipe:
+- Lucas Emanuel Ramos Fernandes
+- Marielly Tamires L. F
+- Vinicius Custodio
+
+0. Descompactar o projeto.
+
+1. Criar banco de dados utilizando o script: createDatabase.sql
+	Obs.: O banco de dados possui algumas informações em Aluno e Evento
+	Obs. 2: O banco está configurado com usuário (usuário) e senha (senha) para login na aplicação .
+	Obs. 3: Foi removido a senha de usuário root dentro do MYSQL. Sendo assim não há mais necessidade do MySQL ser configurado com senha.
+
+2. As libraries foram removidas para que o projeto fosse enviado pelo moodle, sendo assim necessário a inclusão de tais. Caso seja feita a utilização dos netbeans, so ir nas “properties do projeto >> libraries >> Add Library >> Import” e adicione as seguintes libraries: 	
+	- EclipseLink (JPA 2.1)
+	- MySQL JDBC Driver
+	
+	Caso não encontre as libraries nesse caminho ou seja feita a utilização de outra IDE no link a abaixo pode ser encontrado um .zip com as libraries
+	https://drive.google.com/file/d/0BwH_nfsBe5h6eWNjUlFXVXJQTVk/view?usp=sharing
+
+3. Ir ao menu: Run >> Clean and Build. (So para não existir nenhum problema)
+
+4. Executar o projeto
+	4.1 Executar o FormServidor localizado em no pacote view e clicar em Abrir Servidor.
+	4.2 Executar o FormLogin localizado tambem no pacote view, clica em conectar (As informações necessárias ja estarem preenchidas)
+	Obs.: Note que apos clicar em conectar no FormLogin sera aberto um menu que possui duas opções (Evento e Aluno), escolha a opção desejada.
+
+5. Apos realizar os testes desejados utilize o script destroyDatabase.sql para destruir o banco de dados

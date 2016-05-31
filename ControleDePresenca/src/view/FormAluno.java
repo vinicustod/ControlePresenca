@@ -254,6 +254,8 @@ public class FormAluno extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbRegisterActionPerformed
+        
+        
         if (client != null) {
             String toSend = "21;" + jtAcademicRegistry.getText()
                     + ";" + jtName.getText()

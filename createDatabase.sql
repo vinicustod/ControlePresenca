@@ -1,10 +1,11 @@
-CREATE DATABASE  IF NOT EXISTS `bancosd` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `bancosd`;
 -- MySQL dump 10.13  Distrib 5.6.24, for osx10.8 (x86_64)
 --
 -- Host: 127.0.0.1    Database: bancosd
 -- ------------------------------------------------------
 -- Server version	5.6.27
+
+create database IF not Exists bancosd;
+use bancosd;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,42 +17,6 @@ USE `bancosd`;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `Aluno`
---
-
-DROP TABLE IF EXISTS `Aluno`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Aluno` (
-  `idAluno` int(11) NOT NULL,
-  `ra` int(11) DEFAULT NULL,
-  `nome` varchar(100) DEFAULT NULL,
-  `curso` varchar(100) DEFAULT NULL,
-  `periodo` int(11) DEFAULT NULL,
-  `turno` varchar(45) DEFAULT NULL,
-  `email` varchar(45) DEFAULT NULL,
-  `telefone` varchar(45) DEFAULT NULL,
-  `Turma_idTurma` int(11) NOT NULL,
-  `Sorteio_idSorteio` int(11) NOT NULL,
-  `Sorteio_Matricula_idMatricula` int(11) NOT NULL,
-  PRIMARY KEY (`idAluno`,`Turma_idTurma`,`Sorteio_idSorteio`,`Sorteio_Matricula_idMatricula`),
-  KEY `fk_Aluno_Turma_idx` (`Turma_idTurma`),
-  KEY `fk_Aluno_Sorteio1_idx` (`Sorteio_idSorteio`,`Sorteio_Matricula_idMatricula`),
-  CONSTRAINT `fk_Aluno_Sorteio1` FOREIGN KEY (`Sorteio_idSorteio`, `Sorteio_Matricula_idMatricula`) REFERENCES `Sorteio` (`idSorteio`, `Matricula_idMatricula`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Aluno_Turma` FOREIGN KEY (`Turma_idTurma`) REFERENCES `Turma` (`idTurma`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Aluno`
---
-
-LOCK TABLES `Aluno` WRITE;
-/*!40000 ALTER TABLE `Aluno` DISABLE KEYS */;
-/*!40000 ALTER TABLE `Aluno` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `Evento`
@@ -77,7 +42,7 @@ CREATE TABLE `Evento` (
 
 LOCK TABLES `Evento` WRITE;
 /*!40000 ALTER TABLE `Evento` DISABLE KEYS */;
-INSERT INTO `Evento` VALUES (401,'Custodio','Palestra','10:20','14:00','12/12/1994');
+INSERT INTO `Evento` VALUES (251,'Vinicius','Palestra','10:00','12:00','10/10/2000'),(603,'Evento 1','Oficina','12:00','14:00','12/11/2016'),(604,'Evento 2','Minicurso','13:00','18:00','12/11/2015');
 /*!40000 ALTER TABLE `Evento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -148,7 +113,7 @@ CREATE TABLE `SEQUENCE` (
 
 LOCK TABLES `SEQUENCE` WRITE;
 /*!40000 ALTER TABLE `SEQUENCE` DISABLE KEYS */;
-INSERT INTO `SEQUENCE` VALUES ('SEQ_GEN',450);
+INSERT INTO `SEQUENCE` VALUES ('SEQ_GEN',650);
 /*!40000 ALTER TABLE `SEQUENCE` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -226,8 +191,37 @@ CREATE TABLE `Usuario` (
 
 LOCK TABLES `Usuario` WRITE;
 /*!40000 ALTER TABLE `Usuario` DISABLE KEYS */;
-INSERT INTO `Usuario` VALUES (0,'usuario','senha');
+INSERT INTO `Usuario` VALUES (1,'usuario','senha');
 /*!40000 ALTER TABLE `Usuario` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `aluno`
+--
+
+DROP TABLE IF EXISTS `aluno`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `aluno` (
+  `idAluno` int(11) NOT NULL,
+  `ra` int(11) DEFAULT NULL,
+  `nome` varchar(100) DEFAULT NULL,
+  `curso` varchar(100) DEFAULT NULL,
+  `periodo` int(11) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `telefone` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`idAluno`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `aluno`
+--
+
+LOCK TABLES `aluno` WRITE;
+/*!40000 ALTER TABLE `aluno` DISABLE KEYS */;
+INSERT INTO `aluno` VALUES (152,1372475,'Vinicius Custodio','Engenharia Civil',7,'vinihcius.custodio@gmail.com','(42) 8425-9609'),(551,1372475,'Lucas Emanuel','Engenharia Mecânica',1,'vinihcius.custodio@gmail.com','(42) 8425-9609'),(601,1372475,'Marielly F. L.','Ciência da Computação',10,'vinihcius.custodio@gmail.com','(42) 8425-9609'),(602,1372475,'Pedro','Ciências Naturais',3,'pedro@hotmail.com','(42) 8425-9609');
+/*!40000 ALTER TABLE `aluno` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -239,4 +233,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-17  9:02:35
+-- Dump completed on 2016-05-30 13:55:09
