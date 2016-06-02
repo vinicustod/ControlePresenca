@@ -1,4 +1,7 @@
-
+*.jar
 *.class
 /ControleDePresenca 2/build/
 /ControleDePresenca 2/nbproject/private/
+/ControleDePresenca/dist/
+/ControleDePresenca/build/
+/ControleDePresenca/nbbuild/
