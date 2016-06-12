@@ -4,6 +4,7 @@ package communication.server;
 // recebe uma linha e ecoa a linha recebida.
 import VO.Aluno;
 import VO.Evento;
+import VO.Presenca;
 import VO.Usuario;
 import VO.VOHelper;
 import java.io.*;
@@ -11,6 +12,7 @@ import java.net.*;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import persistence.AlunoDB;
 import persistence.EventoDB;
+import persistence.PresencaDB;
 import persistence.UsuarioDB;
 import view.FormServidor;
 
@@ -97,8 +100,25 @@ public class ServerCommunication extends Thread {
             deleteStudentRequest(message);
         } else if ("27".equals(message[0])) {
             createStudentList();
+        } else if ("31".equals(message[0])) {
+            createPresenca(message);
+        } else if ("33".equals(message[0])) {
+            createPresencaList(message);
         } else {
             dutoSaida.println("00;Mensagem Invalida");
+        }
+    }
+
+    private void createPresenca(String[] message) {
+        if (message.length == 3) {
+            Presenca presenca = VOHelper.createPresenca(message[1], message[2]);
+            if (PresencaDB.createPresenca(presenca)) {
+                dutoSaida.println("32;1");
+            } else {
+                dutoSaida.println("32;0");
+            }
+        } else {
+            dutoSaida.println("32;0");
         }
     }
 
@@ -259,6 +279,18 @@ public class ServerCommunication extends Thread {
         } else {
             dutoSaida.println("26;0");
         }
+    }
+
+    private void createPresencaList(String[] message) {
+        String stringList = "34";
+        ArrayList list = (ArrayList) PresencaDB.selectPresenca(message[1]);
+        for (int i = 0; i < list.size(); i++) {
+            Presenca p = (Presenca) list.get(i);
+            Aluno a = p.getIdAluno();
+            String aluno = a.getIdAluno() + ";" + a.getRa() + ";" + a.getNome() + ";" + a.getCurso() + ";" + a.getPeriodo() + ";" + a.getEmail() + ";" + a.getTelefone();
+            stringList = stringList + "|" + aluno;
+        }
+        dutoSaida.println(stringList);
     }
 
 }

@@ -12,15 +12,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import org.eclipse.persistence.internal.jpa.metadata.accessors.classes.InterfaceAccessor;
 import view.FormAluno;
 import view.FormEvento;
 import view.FormMenu;
+import view.FormPresenca;
 
 // Devo ser
 public class ClientCommunication extends Thread implements Observer {
@@ -33,8 +36,13 @@ public class ClientCommunication extends Thread implements Observer {
     int serverPort;
     String ipServer;
     FormLogin iCliente;
+    ArrayList<javax.swing.JFrame> waitingRequest = new ArrayList();
 
     private final Session session = new Session(true);
+
+    public void setWaitingRequest(JFrame waiting) {
+        waitingRequest.add(waiting);
+    }
 
     public ClientCommunication(FormLogin iCliente, int port, String ipServer) {
         this.serverPort = port;
@@ -123,7 +131,7 @@ public class ClientCommunication extends Thread implements Observer {
         try {
             out.println(message);
             System.out.println("mensagem enviada  " + message);
-            
+
         } catch (Exception ex) {
             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -142,7 +150,7 @@ public class ClientCommunication extends Thread implements Observer {
     private void analyzeMessage(String[] message) {
         System.out.println("analyze: " + message.length);
         if (message.length == 1) {
-            
+
             String[] splitMessage = message[0].split(";");
             if ("02".equals(splitMessage[0])) {
                 loginResponse(splitMessage);
@@ -154,18 +162,20 @@ public class ClientCommunication extends Thread implements Observer {
                 queryEventResponse(splitMessage, "delete");
             } else if ("22".equals(splitMessage[0])) {
                 queryStudentResponse(splitMessage, "insert");
-            } else if ("24".equals(splitMessage[0])){
+            } else if ("24".equals(splitMessage[0])) {
                 queryStudentResponse(splitMessage, "alter");
-            } else if ("26".equals(splitMessage[0])){
+            } else if ("26".equals(splitMessage[0])) {
                 queryStudentResponse(splitMessage, "delete");
-            }else if ("00".equals(splitMessage[0])) {
+            } else if ("00".equals(splitMessage[0])) {
                 System.out.println("Erro: " + splitMessage[1]);
-            } 
-            
+            }
+
         } else if ("18".equals(message[0])) {
             listEventsResponse(message);
         } else if ("28".equals(message[0])) {
             listStudentsResponse(message);
+        } else if("34".equals(message[0])){
+            listStudentsforPresencaResponse(message);
         }
     }
 
@@ -195,15 +205,18 @@ public class ClientCommunication extends Thread implements Observer {
 
     private void listEventsResponse(String[] message) {
         ArrayList<Evento> eventos = new ArrayList();
-        
+
         for (int i = 1; i < message.length; i++) {
             String[] event = message[i].split(";");
             Evento e = VOHelper.createEvento(Long.parseLong(event[0]), event[1], event[2], event[3], event[4], event[5]);
             eventos.add(e);
         }
-        //InterfaceCadastrarEvento.createEvento(this);
-        FormEvento.evento.setInTable(eventos);
-        
+        if(!isRequested()){
+            FormEvento.evento.setInTable(eventos);
+        }else{
+            FormPresenca.presenca.setEventosInTable(eventos);
+        }
+
     }
 
     private void queryEventResponse(String[] message, String type) {
@@ -226,6 +239,30 @@ public class ClientCommunication extends Thread implements Observer {
         }
     }
 
+    private boolean isRequested() {
+        Iterator i = waitingRequest.iterator();
+        while (i.hasNext()) {
+            JFrame frame = (JFrame) i.next();
+            if (frame instanceof FormPresenca) {
+                waitingRequest.remove(frame);
+                return true;
+            }
+        }
+        return false;
+    }
+    private void listStudentsforPresencaResponse(String[] message) {
+        ArrayList<Aluno> alunos = new ArrayList();
+        
+        for (int i = 1; i < message.length; i++) {
+            String[] student = message[i].split(";");
+            Aluno e = VOHelper.createStudent(Long.parseLong(student[0]), student[1], student[2], student[3], student[4], student[5], student[6]);
+            alunos.add(e);
+        }
+       
+            FormPresenca.presenca.setAlunosInTablePresenca(alunos);
+        
+    }
+    
     private void listStudentsResponse(String[] message) {
         ArrayList<Aluno> alunos = new ArrayList();
         
@@ -234,7 +271,10 @@ public class ClientCommunication extends Thread implements Observer {
             Aluno e = VOHelper.createStudent(Long.parseLong(student[0]), student[1], student[2], student[3], student[4], student[5], student[6]);
             alunos.add(e);
         }
-        //InterfaceCadastrarEvento.createEvento(this);
-        FormAluno.aluno.setInTable(alunos);    
+        if(!isRequested()){
+            FormAluno.aluno.setInTable(alunos);
+        }else{
+            FormPresenca.presenca.setAlunosInTable(alunos);
+        }
     }
 }

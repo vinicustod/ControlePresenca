@@ -7,6 +7,8 @@ package VO;
 
 import java.sql.Time;
 import java.util.Date;
+import persistence.AlunoDB;
+import persistence.EventoDB;
 
 /**
  *
@@ -43,5 +45,12 @@ public class VOHelper {
         a.setTelefone(telefone);
         
         return a;
+    }
+
+    public static Presenca createPresenca(String idAluno, String idEvento) {
+        Presenca p = new Presenca();
+        p.setIdAluno(AlunoDB.selectStudent(idAluno));
+        p.setIdEvento(EventoDB.selectEvento(idEvento));
+        return p;
     }
 }

@@ -7,10 +7,12 @@ package VO;
 
 import java.sql.Time;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 
 /**
@@ -18,7 +20,7 @@ import javax.persistence.Temporal;
  * @author viniciuscustodio
  */
 @Entity
-public class Aluno {
+public class Aluno implements Comparable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,7 +31,9 @@ public class Aluno {
     private int periodo;
     private String email;
     private String telefone;
-
+    
+    @OneToMany(mappedBy = "idAluno")
+    private List<Presenca> presencas;
     /**
      * @return the idAluno
      */
@@ -126,6 +130,26 @@ public class Aluno {
      */
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Aluno a = (Aluno) o;
+        return this.getRa() - a.getRa();
+    }
+
+    /**
+     * @return the presencas
+     */
+    public List<Presenca> getPresencas() {
+        return presencas;
+    }
+
+    /**
+     * @param presencas the presencas to set
+     */
+    public void setPresencas(List<Presenca> presencas) {
+        this.presencas = presencas;
     }
     
     

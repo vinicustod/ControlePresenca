@@ -59,15 +59,14 @@ public class AlunoDB {
         try {
             System.out.println("here update");
             Aluno queryAluno = em.find(Aluno.class, aluno.getIdAluno());
- 
-            
+
             queryAluno.setNome(aluno.getNome());
             queryAluno.setCurso(aluno.getCurso());
             queryAluno.setEmail(aluno.getEmail());
             queryAluno.setRa(aluno.getRa());
             queryAluno.setTelefone(aluno.getTelefone());
             queryAluno.setPeriodo(aluno.getPeriodo());
-            
+
             trans.commit();
         } catch (Exception e) {
             System.out.println(e);
@@ -82,14 +81,13 @@ public class AlunoDB {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         EntityTransaction trans = em.getTransaction();
         trans.begin();
-        
+
         try {
-            
+
             Aluno queryAluno = em.find(Aluno.class, aluno.getIdAluno());
- 
-            
+
             em.remove(queryAluno);
-            
+
             trans.commit();
         } catch (Exception e) {
             System.out.println(e);
@@ -98,5 +96,23 @@ public class AlunoDB {
             em.close();
         }
         return true;
+    }
+
+    public static Aluno selectStudent(String idAluno) {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "SELECT a FROM Aluno a "
+                + "WHERE a.idAluno = :idAluno";
+        TypedQuery<Aluno> q = em.createQuery(qString, Aluno.class);
+        q.setParameter("idAluno", idAluno);
+        Aluno result = null;
+        try {
+            result = q.getSingleResult();
+        } catch (NoResultException ex) {
+            return null;
+        } finally {
+            em.close();
+        }
+
+        return (Aluno) result;
     }
 }

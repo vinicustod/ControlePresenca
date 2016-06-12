@@ -7,10 +7,12 @@ package VO;
 
 import java.sql.Time;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 
 /**
@@ -19,7 +21,7 @@ import javax.persistence.Temporal;
  */
 @Entity
 public class Evento {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idEvento;
@@ -28,7 +30,10 @@ public class Evento {
     private String horaInicial;
     private String horaFinal;
     private String tipo;
-    
+   
+    @OneToMany(mappedBy = "idEvento")
+    private List<Presenca> presencas;
+
     /**
      * @return the idEvento
      */
@@ -112,11 +117,23 @@ public class Evento {
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
-    
-    
+
     @Override
-    public String toString(){
-        return this.idEvento + " " + this.nome + " " +  this.date + " " + 
-                this.horaInicial + " " + this.horaFinal + " " + this.tipo;
+    public String toString() {
+        return this.getNome() + " " + this.getDate();
+    }
+
+    /**
+     * @return the presencas
+     */
+    public List<Presenca> getPresencas() {
+        return presencas;
+    }
+
+    /**
+     * @param presencas the presencas to set
+     */
+    public void setPresencas(List<Presenca> presencas) {
+        this.presencas = presencas;
     }
 }

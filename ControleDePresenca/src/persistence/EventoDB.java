@@ -5,6 +5,7 @@
  */
 package persistence;
 
+import VO.Aluno;
 import VO.Evento;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -95,5 +96,23 @@ public class EventoDB {
             em.close();
         }
         return true;
+    }
+
+    public static Evento selectEvento(String idEvento) {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "SELECT a FROM Evento a "
+                + "WHERE a.idEvento = :idEvento";
+        TypedQuery<Evento> q = em.createQuery(qString, Evento.class);
+        q.setParameter("idEvento", idEvento);
+        Evento result = null;
+        try {
+            result = q.getSingleResult();
+        } catch (NoResultException ex) {
+            return null;
+        } finally {
+            em.close();
+        }
+
+        return (Evento) result;
     }
 }

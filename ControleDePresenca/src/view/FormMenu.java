@@ -51,6 +51,7 @@ public class FormMenu extends javax.swing.JFrame implements Observer{
 
         jButton1 = new javax.swing.JButton();
         jbAluno = new javax.swing.JButton();
+        bPresenca = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -68,6 +69,13 @@ public class FormMenu extends javax.swing.JFrame implements Observer{
             }
         });
 
+        bPresenca.setText("Presenca");
+        bPresenca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bPresencaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -76,8 +84,9 @@ public class FormMenu extends javax.swing.JFrame implements Observer{
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
-                    .addComponent(jbAluno))
-                .addContainerGap(308, Short.MAX_VALUE))
+                    .addComponent(jbAluno)
+                    .addComponent(bPresenca))
+                .addContainerGap(295, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -86,7 +95,9 @@ public class FormMenu extends javax.swing.JFrame implements Observer{
                 .addComponent(jButton1)
                 .addGap(18, 18, 18)
                 .addComponent(jbAluno)
-                .addContainerGap(203, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(bPresenca)
+                .addContainerGap(156, Short.MAX_VALUE))
         );
 
         pack();
@@ -100,6 +111,11 @@ public class FormMenu extends javax.swing.JFrame implements Observer{
         FormAluno.createAluno(client);
 // TODO add your handling code here:
     }//GEN-LAST:event_jbAlunoActionPerformed
+
+    private void bPresencaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bPresencaActionPerformed
+        FormPresenca.createPresenca(client);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bPresencaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -149,6 +165,7 @@ public class FormMenu extends javax.swing.JFrame implements Observer{
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bPresenca;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jbAluno;
     // End of variables declaration//GEN-END:variables

@@ -19,12 +19,11 @@
         </group>
         <group name="Engenharia de Software">
             <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/communication/server/ServerCommunication.java</file>
-            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/communication/client/ClientCommunication.java</file>
             <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/view/FormEvento.java</file>
-            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/view/FormAluno.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/view/FormPresenca.java</file>
             <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/VO/Aluno.java</file>
-            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/persistence/AlunoDB.java</file>
-            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/view/FormServidor.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/VO/VOHelper.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/persistence/DBUtil.java</file>
         </group>
     </open-files>
 </project-private>
