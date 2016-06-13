@@ -98,12 +98,12 @@ public class EventoDB {
         return true;
     }
 
-    public static Evento selectEvento(String idEvento) {
+    public static Evento selectEvento(Evento evento) {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         String qString = "SELECT a FROM Evento a "
                 + "WHERE a.idEvento = :idEvento";
         TypedQuery<Evento> q = em.createQuery(qString, Evento.class);
-        q.setParameter("idEvento", idEvento);
+        q.setParameter("idEvento", evento.getIdEvento());
         Evento result = null;
         try {
             result = q.getSingleResult();

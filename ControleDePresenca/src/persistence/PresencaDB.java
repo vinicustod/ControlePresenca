@@ -35,11 +35,11 @@ public class PresencaDB {
         return true;
     }
 
-    public static List<Presenca> selectPresenca(String idEvento) {
+    public static List<Presenca> selectPresenca(Evento evento) {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
-        String qString = "SELECT e from Presenca e where e.idEvento = :idEvento";
+        String qString = "SELECT p from Presenca p where p.evento = :evento";
         TypedQuery<Presenca> q = em.createQuery(qString, Presenca.class);
-        q.setParameter("idEvento", idEvento);
+        q.setParameter("evento", evento);
         List<Presenca> results = null;
 
         try {

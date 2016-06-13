@@ -5,6 +5,7 @@
  */
 package VO;
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +21,7 @@ import javax.persistence.Temporal;
  * @author viniciuscustodio
  */
 @Entity
-public class Aluno implements Comparable{
+public class Aluno implements Comparable, Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,7 +33,7 @@ public class Aluno implements Comparable{
     private String email;
     private String telefone;
     
-    @OneToMany(mappedBy = "idAluno")
+    @OneToMany(mappedBy = "aluno")
     private List<Presenca> presencas;
     /**
      * @return the idAluno

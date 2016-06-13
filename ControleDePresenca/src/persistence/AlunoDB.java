@@ -98,12 +98,12 @@ public class AlunoDB {
         return true;
     }
 
-    public static Aluno selectStudent(String idAluno) {
+    public static Aluno selectStudent(Aluno aluno) {
         EntityManager em = DBUtil.getEmFactory().createEntityManager();
         String qString = "SELECT a FROM Aluno a "
                 + "WHERE a.idAluno = :idAluno";
         TypedQuery<Aluno> q = em.createQuery(qString, Aluno.class);
-        q.setParameter("idAluno", idAluno);
+        q.setParameter("idAluno", aluno.getIdAluno());
         Aluno result = null;
         try {
             result = q.getSingleResult();

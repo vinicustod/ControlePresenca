@@ -5,6 +5,7 @@
  */
 package VO;
 
+import java.io.Serializable;
 import java.sql.Time;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +21,7 @@ import javax.persistence.Temporal;
  * @author viniciuscustodio
  */
 @Entity
-public class Evento {
+public class Evento implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,7 +32,7 @@ public class Evento {
     private String horaFinal;
     private String tipo;
    
-    @OneToMany(mappedBy = "idEvento")
+    @OneToMany(mappedBy = "evento")
     private List<Presenca> presencas;
 
     /**

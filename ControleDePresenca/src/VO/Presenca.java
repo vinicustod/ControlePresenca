@@ -5,6 +5,7 @@
  */
 package VO;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,17 +17,18 @@ import javax.persistence.ManyToOne;
  * @author viniciuscustodio
  */
 @Entity
-public class Presenca {
+public class Presenca implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long idPresenca;
 
+   
     @ManyToOne
-    private Aluno idAluno;
+    private Aluno aluno;
 
     @ManyToOne
-    private Evento idEvento;
+    private Evento evento;
     
     private boolean presente;
 
@@ -44,33 +46,7 @@ public class Presenca {
         this.idPresenca = idPresenca;
     }
 
-    /**
-     * @return the idAluno
-     */
-    public Aluno getIdAluno() {
-        return idAluno;
-    }
 
-    /**
-     * @param idAluno the idAluno to set
-     */
-    public void setIdAluno(Aluno idAluno) {
-        this.idAluno = idAluno;
-    }
-
-    /**
-     * @return the idEvento
-     */
-    public Evento getIdEvento() {
-        return idEvento;
-    }
-
-    /**
-     * @param idEvento the idEvento to set
-     */
-    public void setIdEvento(Evento idEvento) {
-        this.idEvento = idEvento;
-    }
 
     /**
      * @return the presente
@@ -84,5 +60,33 @@ public class Presenca {
      */
     public void setPresente(boolean presente) {
         this.presente = presente;
+    }
+
+    /**
+     * @return the aluno
+     */
+    public Aluno getAluno() {
+        return aluno;
+    }
+
+    /**
+     * @param aluno the aluno to set
+     */
+    public void setAluno(Aluno aluno) {
+        this.aluno = aluno;
+    }
+
+    /**
+     * @return the evento
+     */
+    public Evento getEvento() {
+        return evento;
+    }
+
+    /**
+     * @param evento the evento to set
+     */
+    public void setEvento(Evento evento) {
+        this.evento = evento;
     }
 }

@@ -111,7 +111,15 @@ public class ServerCommunication extends Thread {
 
     private void createPresenca(String[] message) {
         if (message.length == 3) {
-            Presenca presenca = VOHelper.createPresenca(message[1], message[2]);
+            
+            Aluno aluno = new Aluno();
+            Evento evento = new Evento();
+            
+            aluno.setIdAluno( Long.parseLong(message[1]) );
+            evento.setIdEvento(Long.parseLong(message[2]) );
+            
+            
+            Presenca presenca = VOHelper.createPresenca(aluno, evento);
             if (PresencaDB.createPresenca(presenca)) {
                 dutoSaida.println("32;1");
             } else {
@@ -283,10 +291,12 @@ public class ServerCommunication extends Thread {
 
     private void createPresencaList(String[] message) {
         String stringList = "34";
-        ArrayList list = (ArrayList) PresencaDB.selectPresenca(message[1]);
+        Evento evento = new Evento();
+        evento.setIdEvento( Long.parseLong(message[1]) );
+        List list = PresencaDB.selectPresenca(evento);
         for (int i = 0; i < list.size(); i++) {
             Presenca p = (Presenca) list.get(i);
-            Aluno a = p.getIdAluno();
+            Aluno a = p.getAluno();
             String aluno = a.getIdAluno() + ";" + a.getRa() + ";" + a.getNome() + ";" + a.getCurso() + ";" + a.getPeriodo() + ";" + a.getEmail() + ";" + a.getTelefone();
             stringList = stringList + "|" + aluno;
         }

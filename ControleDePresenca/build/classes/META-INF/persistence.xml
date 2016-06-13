@@ -4,8 +4,8 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>VO.Aluno</class>
     <class>VO.Evento</class>
-    <class>VO.Presenca</class>
     <class>VO.Usuario</class>
+    <class>VO.Presenca</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/bancosd?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

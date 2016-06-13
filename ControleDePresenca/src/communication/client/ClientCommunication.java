@@ -12,14 +12,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import org.eclipse.persistence.internal.jpa.metadata.accessors.classes.InterfaceAccessor;
 import view.FormAluno;
 import view.FormEvento;
 import view.FormMenu;
@@ -174,6 +171,8 @@ public class ClientCommunication extends Thread implements Observer {
             listEventsResponse(message);
         } else if ("28".equals(message[0])) {
             listStudentsResponse(message);
+        } else if("32".equals(message[0])){
+            listStudentsforPresencaResponse(message);
         } else if("34".equals(message[0])){
             listStudentsforPresencaResponse(message);
         }
@@ -240,9 +239,7 @@ public class ClientCommunication extends Thread implements Observer {
     }
 
     private boolean isRequested() {
-        Iterator i = waitingRequest.iterator();
-        while (i.hasNext()) {
-            JFrame frame = (JFrame) i.next();
+        for (JFrame frame : waitingRequest) {
             if (frame instanceof FormPresenca) {
                 waitingRequest.remove(frame);
                 return true;
@@ -274,7 +271,8 @@ public class ClientCommunication extends Thread implements Observer {
         if(!isRequested()){
             FormAluno.aluno.setInTable(alunos);
         }else{
-            FormPresenca.presenca.setAlunosInTable(alunos);
+            FormPresenca.presenca.setAlunos(alunos);
+            FormPresenca.presenca.setAlunosInTable();
         }
     }
 }

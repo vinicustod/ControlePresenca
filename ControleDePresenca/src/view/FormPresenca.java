@@ -9,15 +9,16 @@ import VO.Aluno;
 import VO.Evento;
 import communication.client.ClientCommunication;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JTable;
+import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import static view.FormEvento.evento;
 
 /**
  *
@@ -25,15 +26,18 @@ import static view.FormEvento.evento;
  */
 public class FormPresenca extends javax.swing.JFrame {
 
-    private TableRowSorter<TableModel> rowSorter;
+    private final TableRowSorter<TableModel> rowSorter;
 
     ArrayList<Evento> eventos = null;
-    ArrayList<Aluno> alunos = null;
+    private ArrayList<Aluno> alunos = null;
     ClientCommunication client = null;
     public static FormPresenca presenca = null;
-    HashMap<Aluno, Integer> alunosOrganized;
+    
+    HashMap<Long, Aluno> alunosNotAdded = new HashMap();
+    HashMap<Long, Aluno> alunosAdded = new HashMap();
 
-    public static void createPresenca(ClientCommunication client) {
+    public static void createPresenca(ClientCommunication client) 
+    {
         if (presenca == null) {
             presenca = new FormPresenca();
         }
@@ -53,55 +57,69 @@ public class FormPresenca extends javax.swing.JFrame {
      * @param alunos
      */
     public void setAlunosInTablePresenca(ArrayList<Aluno> alunos) {
-        //this.alunos = alunos;
-        //Collections.sort(alunos);
-        //alunosOrganized = new HashMap();
-
-//        alunos.stream().forEach((al) -> {
-//            alunosOrganized.put(al, al.getRa());
-//        });
 
         // Atualizando a tabela
-        DefaultTableModel model = (DefaultTableModel) tablePresenca.getModel();
+        Collections.sort(alunos);
+        
+        alunosAdded.clear();
+
+        // Atualizando a tabela
+        DefaultTableModel model = (DefaultTableModel) this.tablePresenca.getModel();
         model.setRowCount(0);
 
         alunos.stream().forEach((al) -> {
-            model.addRow(new Object[]{
-                al.getRa(), al.getNome()
-            });
+            alunosAdded.put(al.getIdAluno(), al);
+            addAlunoInTable(model, al);
         });
+        
+        setAlunosInTable();
     }
     
-    public void setAlunosInTable(ArrayList<Aluno> alunos) {
-        this.alunos = alunos;
+    public void setAlunosInTable() {
+        
         Collections.sort(alunos);
-        alunosOrganized = new HashMap();
-
+        
+        alunosNotAdded.clear();
+        
+        /*
         alunos.stream().forEach((al) -> {
-            alunosOrganized.put(al, al.getRa());
+            alunosNotAdded.put(al.getIdAluno(), al);
         });
-
+        */
+        
         // Atualizando a tabela
         DefaultTableModel model = (DefaultTableModel) tableAlunos.getModel();
         model.setRowCount(0);
 
         alunos.stream().forEach((al) -> {
-            model.addRow(new Object[]{
-                al.getRa(), al.getNome()
-            });
+            if(! this.alunosAdded.containsKey(al.getIdAluno()) )
+            {
+                this.alunosNotAdded.put(al.getIdAluno(), al);
+                addAlunoInTable(model, al);
+            }
         });
     }
 
+    private void addAlunoInTable(DefaultTableModel model, Aluno aluno)
+    {
+        model.addRow(new Object[]{
+                aluno.getIdAluno(), aluno.getRa(), aluno.getNome()
+            });
+    }
+    
     public void setEventosInTable(ArrayList<Evento> eventos) {
         this.eventos = eventos;
 
         DefaultComboBoxModel model = (DefaultComboBoxModel) jcbEvents.getModel();
         model.removeAllElements();
-        model.addElement("");
+        //model.addElement(""); 
+        
+        
         eventos.stream().forEach((ev) -> {
+            //System.out.println(evento);
             model.addElement(ev);
         });
-        model.setSelectedItem("");
+        //model.setSelectedItem("");
     }
 
     private void getEventos() {
@@ -138,39 +156,32 @@ public class FormPresenca extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         tfSearchStudent = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jBAdd = new javax.swing.JButton();
+        jBRemove = new javax.swing.JButton();
         Registrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         tableAlunos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+
             },
             new String [] {
-                "RA", "Nome"
+                "ID", "RA", "Nome"
             }
         ));
         jScrollPane1.setViewportView(tableAlunos);
 
         tablePresenca.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+
             },
             new String [] {
-                "RA", "Nome"
+                "ID", "RA", "Nome"
             }
         ));
         jScrollPane2.setViewportView(tablePresenca);
 
-        jcbEvents.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jcbEvents.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jcbEventsActionPerformed(evt);
@@ -198,14 +209,19 @@ public class FormPresenca extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Add");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jBAdd.setText("Add");
+        jBAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jBAddActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Remove");
+        jBRemove.setText("Remove");
+        jBRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBRemoveActionPerformed(evt);
+            }
+        });
 
         Registrar.setText("Registrar");
         Registrar.addActionListener(new java.awt.event.ActionListener() {
@@ -240,12 +256,12 @@ public class FormPresenca extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
-                                .addComponent(jButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                                .addComponent(jBRemove)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton1)
+                                .addComponent(jBAdd)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(23, 23, 23))
@@ -268,21 +284,38 @@ public class FormPresenca extends javax.swing.JFrame {
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(122, 122, 122)
-                        .addComponent(jButton1)
+                        .addComponent(jBAdd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)))
+                        .addComponent(jBRemove)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Registrar)
-                .addContainerGap(7, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void jBAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAddActionPerformed
+        
+        int[] selectedAlunos;
+        selectedAlunos = this.tableAlunos.getSelectedRows();
+        
+        DefaultTableModel modelPresenca = (DefaultTableModel) this.tablePresenca.getModel();
+        DefaultTableModel modelAluno = (DefaultTableModel) this.tableAlunos.getModel();
+        
+        for(int indexAluno: selectedAlunos)
+        {
+            Aluno aluno = (Aluno)(  alunosNotAdded.get( (long) this.tableAlunos.getValueAt(indexAluno, 0) ) );
+            addAlunoInTable(modelPresenca, aluno);
+            this.alunosAdded.put(aluno.getIdAluno(), aluno);
+            
+            //this.alunosNotAdded.remove( aluno.getIdAluno() );
+            
+            modelAluno.removeRow(indexAluno);
+        }
+        
+        
+    }//GEN-LAST:event_jBAddActionPerformed
 
     private void tfSearchStudentKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfSearchStudentKeyPressed
 
@@ -310,16 +343,21 @@ public class FormPresenca extends javax.swing.JFrame {
     }//GEN-LAST:event_tfSearchStudentKeyReleased
 
     private void RegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegistrarActionPerformed
-        DefaultTableModel presenca = (DefaultTableModel) tablePresenca.getModel();
-        for (int i = 0; i < presenca.getRowCount(); i++) {
-            client.sendMessage("31;" + alunosOrganized.get(presenca.getValueAt(i, 0)) + ";" + ((Evento) jcbEvents.getSelectedItem()).getIdEvento());
+        DefaultTableModel presencaModel = (DefaultTableModel) this.tablePresenca.getModel();
+        
+        for (int i = 0; i < presencaModel.getRowCount(); i++) {
+            Aluno aluno = alunosAdded.get( (long) presencaModel.getValueAt(i, 0) );
+            
+            client.sendMessage("31;" + aluno.getIdAluno() + ";" + ((Evento) jcbEvents.getSelectedItem()).getIdEvento());
         }
 
         // TODO add your handling code here:
     }//GEN-LAST:event_RegistrarActionPerformed
 
     private void jcbEventsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jcbEventsActionPerformed
-        DefaultComboBoxModel model = (DefaultComboBoxModel) jcbEvents.getModel();
+        
+        //DefaultComboBoxModel model = (DefaultComboBoxModel) jcbEvents.getModel();
+        
         Object selected = jcbEvents.getSelectedItem();
         if (selected != null) {
             if (!selected.equals("")) {
@@ -328,6 +366,40 @@ public class FormPresenca extends javax.swing.JFrame {
         }
         // TODO add your handling code here:
     }//GEN-LAST:event_jcbEventsActionPerformed
+
+    private void jBRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBRemoveActionPerformed
+        // TODO add your handling code here:
+        
+        
+        int[] selectedAlunos;
+        selectedAlunos = this.tablePresenca.getSelectedRows();
+        System.out.println(Arrays.toString(selectedAlunos));
+        if(selectedAlunos == null)
+            return;
+        
+        DefaultTableModel modelPresenca = (DefaultTableModel) this.tablePresenca.getModel();
+        DefaultTableModel modelAluno = (DefaultTableModel) this.tableAlunos.getModel();
+        
+        for(int indexAluno: selectedAlunos)
+        {
+            Aluno aluno = (Aluno)(  alunosAdded.get( (long) this.tablePresenca.getValueAt(indexAluno, 0) ) );
+            
+            if( !this.alunosNotAdded.containsKey(aluno.getIdAluno()) )
+            {
+                JOptionPane.showMessageDialog(null, "Não é possível remover aluno já cadastrado.", "Erro", ERROR_MESSAGE);
+            }
+            else
+            {
+                addAlunoInTable(modelAluno, aluno);
+                modelPresenca.removeRow(indexAluno);
+            }
+            
+            //this.alunosNotAdded.remove( aluno.getIdAluno() );
+            
+            
+        }
+        
+    }//GEN-LAST:event_jBRemoveActionPerformed
 
     /**
      * @param args the command line arguments
@@ -357,17 +429,15 @@ public class FormPresenca extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new FormPresenca().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new FormPresenca().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Registrar;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jBAdd;
+    private javax.swing.JButton jBRemove;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -377,4 +447,11 @@ public class FormPresenca extends javax.swing.JFrame {
     private javax.swing.JTable tablePresenca;
     private javax.swing.JTextField tfSearchStudent;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * @param alunos the alunos to set
+     */
+    public void setAlunos(ArrayList<Aluno> alunos) {
+        this.alunos = alunos;
+    }
 }

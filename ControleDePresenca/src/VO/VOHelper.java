@@ -47,10 +47,10 @@ public class VOHelper {
         return a;
     }
 
-    public static Presenca createPresenca(String idAluno, String idEvento) {
+    public static Presenca createPresenca(Aluno aluno, Evento evento) {
         Presenca p = new Presenca();
-        p.setIdAluno(AlunoDB.selectStudent(idAluno));
-        p.setIdEvento(EventoDB.selectEvento(idEvento));
+        p.setAluno(AlunoDB.selectStudent(aluno));
+        p.setEvento(EventoDB.selectEvento(evento));
         return p;
     }
 }
