@@ -15,6 +15,7 @@ import java.util.HashMap;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -25,6 +26,8 @@ import javax.swing.table.TableRowSorter;
  * @author viniciuscustodio
  */
 public class FormPresenca extends javax.swing.JFrame {
+
+   
 
     private final TableRowSorter<TableModel> rowSorter;
 
@@ -54,20 +57,19 @@ public class FormPresenca extends javax.swing.JFrame {
     /**
      * Creates new form FormPresenca
      *
-     * @param alunos
+     * @param newALunos
      */
-    public void setAlunosInTablePresenca(ArrayList<Aluno> alunos) {
-
+    public void setAlunosInTablePresenca(ArrayList<Aluno> newALunos) {
         // Atualizando a tabela
-        Collections.sort(alunos);
-        
+        Collections.sort(newALunos);
         alunosAdded.clear();
 
         // Atualizando a tabela
         DefaultTableModel model = (DefaultTableModel) this.tablePresenca.getModel();
         model.setRowCount(0);
+        this.tablePresenca.removeAll();
 
-        alunos.stream().forEach((al) -> {
+        newALunos.stream().forEach((al) -> {
             alunosAdded.put(al.getIdAluno(), al);
             addAlunoInTable(model, al);
         });
@@ -88,8 +90,9 @@ public class FormPresenca extends javax.swing.JFrame {
         */
         
         // Atualizando a tabela
-        DefaultTableModel model = (DefaultTableModel) tableAlunos.getModel();
+        DefaultTableModel model = (DefaultTableModel) this.tableAlunos.getModel();
         model.setRowCount(0);
+        this.tableAlunos.removeAll();
 
         alunos.stream().forEach((al) -> {
             if(! this.alunosAdded.containsKey(al.getIdAluno()) )
@@ -116,6 +119,7 @@ public class FormPresenca extends javax.swing.JFrame {
         
         
         eventos.stream().forEach((ev) -> {
+            System.out.println(ev);
             //System.out.println(evento);
             model.addElement(ev);
         });
@@ -182,6 +186,11 @@ public class FormPresenca extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(tablePresenca);
 
+        jcbEvents.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbEventsItemStateChanged(evt);
+            }
+        });
         jcbEvents.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jcbEventsActionPerformed(evt);
@@ -297,22 +306,21 @@ public class FormPresenca extends javax.swing.JFrame {
 
     private void jBAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAddActionPerformed
         
-        int[] selectedAlunos;
-        selectedAlunos = this.tableAlunos.getSelectedRows();
+        int indexAluno = this.tableAlunos.getSelectedRow();
+        if (indexAluno == -1)
+            return;
         
         DefaultTableModel modelPresenca = (DefaultTableModel) this.tablePresenca.getModel();
         DefaultTableModel modelAluno = (DefaultTableModel) this.tableAlunos.getModel();
         
-        for(int indexAluno: selectedAlunos)
-        {
-            Aluno aluno = (Aluno)(  alunosNotAdded.get( (long) this.tableAlunos.getValueAt(indexAluno, 0) ) );
-            addAlunoInTable(modelPresenca, aluno);
-            this.alunosAdded.put(aluno.getIdAluno(), aluno);
-            
-            //this.alunosNotAdded.remove( aluno.getIdAluno() );
-            
-            modelAluno.removeRow(indexAluno);
-        }
+        Aluno aluno = (Aluno)(  alunosNotAdded.get( (long) this.tableAlunos.getValueAt(indexAluno, 0) ) );
+        addAlunoInTable(modelPresenca, aluno);
+        //this.alunosAdded.put(aluno.getIdAluno(), aluno);
+
+        //this.alunosNotAdded.remove( aluno.getIdAluno() );
+
+        modelAluno.removeRow(indexAluno);
+      
         
         
     }//GEN-LAST:event_jBAddActionPerformed
@@ -346,10 +354,24 @@ public class FormPresenca extends javax.swing.JFrame {
         DefaultTableModel presencaModel = (DefaultTableModel) this.tablePresenca.getModel();
         
         for (int i = 0; i < presencaModel.getRowCount(); i++) {
-            Aluno aluno = alunosAdded.get( (long) presencaModel.getValueAt(i, 0) );
+            Aluno aluno = alunosNotAdded.get( (long) presencaModel.getValueAt(i, 0) );
+            // Novo aluno a ser adicionado
+            
+            if(aluno == null)
+            {
+                continue;
+            }
             
             client.sendMessage("31;" + aluno.getIdAluno() + ";" + ((Evento) jcbEvents.getSelectedItem()).getIdEvento());
+                
+            this.alunosAdded.put(aluno.getIdAluno(), aluno);
+            this.alunosNotAdded.remove(aluno.getIdAluno());
+            
+            
+           
         }
+        
+        
 
         // TODO add your handling code here:
     }//GEN-LAST:event_RegistrarActionPerformed
@@ -358,12 +380,7 @@ public class FormPresenca extends javax.swing.JFrame {
         
         //DefaultComboBoxModel model = (DefaultComboBoxModel) jcbEvents.getModel();
         
-        Object selected = jcbEvents.getSelectedItem();
-        if (selected != null) {
-            if (!selected.equals("")) {
-                client.sendMessage("33;" + ((Evento) selected).getIdEvento());
-            }
-        }
+        
         // TODO add your handling code here:
     }//GEN-LAST:event_jcbEventsActionPerformed
 
@@ -371,37 +388,59 @@ public class FormPresenca extends javax.swing.JFrame {
         // TODO add your handling code here:
         
         
-        int[] selectedAlunos;
-        selectedAlunos = this.tablePresenca.getSelectedRows();
-        System.out.println(Arrays.toString(selectedAlunos));
-        if(selectedAlunos == null)
+        int indexAluno = this.tablePresenca.getSelectedRow();
+        if (indexAluno == -1)
             return;
+        
         
         DefaultTableModel modelPresenca = (DefaultTableModel) this.tablePresenca.getModel();
         DefaultTableModel modelAluno = (DefaultTableModel) this.tableAlunos.getModel();
         
-        for(int indexAluno: selectedAlunos)
+       
+        Aluno aluno = (Aluno)(  alunosNotAdded.get( (long) this.tablePresenca.getValueAt(indexAluno, 0) ) );
+
+        // Aluno já cadastrado
+        if( aluno == null )
         {
-            Aluno aluno = (Aluno)(  alunosAdded.get( (long) this.tablePresenca.getValueAt(indexAluno, 0) ) );
-            
-            if( !this.alunosNotAdded.containsKey(aluno.getIdAluno()) )
-            {
-                JOptionPane.showMessageDialog(null, "Não é possível remover aluno já cadastrado.", "Erro", ERROR_MESSAGE);
-            }
-            else
-            {
-                addAlunoInTable(modelAluno, aluno);
-                modelPresenca.removeRow(indexAluno);
-            }
-            
-            //this.alunosNotAdded.remove( aluno.getIdAluno() );
-            
-            
+            JOptionPane.showMessageDialog(null, "Não é possível remover aluno já cadastrado.", "Erro", ERROR_MESSAGE);
+        }
+        else
+        {
+            addAlunoInTable(modelAluno, aluno);
+            modelPresenca.removeRow(indexAluno);
         }
         
     }//GEN-LAST:event_jBRemoveActionPerformed
 
+    private void jcbEventsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbEventsItemStateChanged
+        // TODO add your handling code here:
+        
+        Object selected = jcbEvents.getSelectedItem();
+        if (selected != null) {
+            if (!selected.equals("")) {
+                client.sendMessage("33;" + ((Evento) selected).getIdEvento());
+            }
+        }
+    }//GEN-LAST:event_jcbEventsItemStateChanged
+
+    
+    public static void warning(boolean success) {
+        String message = "";
+        int tipo = 0;
+        if(success)
+        {
+            tipo = INFORMATION_MESSAGE;
+            message = "Aluno matriculado";
+        }
+        else
+        {
+            tipo = ERROR_MESSAGE;
+            message = "Aluno não matriculado";
+        }
+        JOptionPane.showMessageDialog(null, message, "Informação" , tipo);
+    }
     /**
+     * 
      * @param args the command line arguments
      */
     public static void main(String args[]) {

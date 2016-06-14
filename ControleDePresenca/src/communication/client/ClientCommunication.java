@@ -146,7 +146,10 @@ public class ClientCommunication extends Thread implements Observer {
 
     private void analyzeMessage(String[] message) {
         System.out.println("analyze: " + message.length);
-        if (message.length == 1) {
+        if("34".equals(message[0])) {
+            listStudentsforPresencaResponse(message);
+        }
+        else if (message.length == 1) {
 
             String[] splitMessage = message[0].split(";");
             if ("02".equals(splitMessage[0])) {
@@ -165,17 +168,15 @@ public class ClientCommunication extends Thread implements Observer {
                 queryStudentResponse(splitMessage, "delete");
             } else if ("00".equals(splitMessage[0])) {
                 System.out.println("Erro: " + splitMessage[1]);
+            } else if("32".equals(splitMessage[0])){
+                presencaResponse(splitMessage);
             }
 
         } else if ("18".equals(message[0])) {
             listEventsResponse(message);
         } else if ("28".equals(message[0])) {
             listStudentsResponse(message);
-        } else if("32".equals(message[0])){
-            listStudentsforPresencaResponse(message);
-        } else if("34".equals(message[0])){
-            listStudentsforPresencaResponse(message);
-        }
+        } 
     }
 
     private void loginResponse(String[] message) {
@@ -273,6 +274,17 @@ public class ClientCommunication extends Thread implements Observer {
         }else{
             FormPresenca.presenca.setAlunos(alunos);
             FormPresenca.presenca.setAlunosInTable();
+        }
+    }
+
+    private void presencaResponse(String[] message) {
+
+        if (message.length == 2) {
+            if ("1".equals(message[1])) {
+                FormPresenca.warning(true);
+            } else {
+                FormPresenca.warning(false);
+            }
         }
     }
 }
