@@ -1,7 +1,5 @@
 package communication.server;
 
-
-
 import view.FormServidor;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -20,8 +18,6 @@ import java.util.Iterator;
  */
 public class ServerManager extends Thread {
 
- 
-
     int porta;
     FormServidor iServer;
     private static ServerSocket serverSocket = null;
@@ -31,18 +27,18 @@ public class ServerManager extends Thread {
         this.porta = portaServidor;
         this.iServer = iServer;
     }
-    
-    public void stopAll(){
+
+    public void stopAll() {
         Iterator i = athreads.iterator();
-        while(i.hasNext()){
+        while (i.hasNext()) {
             ServerCommunication thread = (ServerCommunication) i.next();
             thread.closingServer();
             thread.stop();
         }
     }
-    
+
     public void run() {
-        iServer.getJtMessage().setText(iServer.getJtMessage().getText() + "\n" + "Servidor carregado no IP 127.0.0.1 e na porta " + porta);
+        iServer.getJtMessage().setText(iServer.getJtMessage().getText() + "Servidor carregado no IP 127.0.0.1 e na porta " + porta + "\n");
 
         //ServerSocket servidorEco = null;        // cria o socket do servidor
         Socket socketCliente = null;            // cria o socket do cliente
@@ -58,11 +54,8 @@ public class ServerManager extends Thread {
 
         try {
             while (true) {
-                                System.out.println("esperando");
-
                 socketCliente = serverSocket.accept();                         // aguarda conexão do cliente
-                    System.out.println("aceitou");
-                ServerCommunication t = new ServerCommunication( socketCliente, getServerSocket(), porta, iServer);
+                ServerCommunication t = new ServerCommunication(socketCliente, getServerSocket(), porta, iServer);
                 athreads.add(t);
                 t.start();
 
@@ -70,8 +63,8 @@ public class ServerManager extends Thread {
         } catch (IOException e) {
         }
     }
-    
-       /**
+
+    /**
      * @return the serverSocket
      */
     public static ServerSocket getServerSocket() {

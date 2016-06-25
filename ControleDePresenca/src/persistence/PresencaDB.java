@@ -24,7 +24,7 @@ public class PresencaDB {
         EntityTransaction trans = em.getTransaction();
         trans.begin();
         try {
-            em.persist(presenca);
+            em.persist(presenca); //criar um objeto
             trans.commit();
         } catch (Exception e) {
             System.out.println(e);

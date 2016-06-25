@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/communication/server/ServerCommunication.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/view/FormMenu.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/view/FormEvento.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/view/FormAluno.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/VO/Aluno.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/VO/VOHelper.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/communication/server/ServerManager.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/view/FormServidor.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/communication/client/ClientCommunication.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/VO/Evento.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/view/FormLogin.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/persistence/EventoDB.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/persistence/AlunoDB.java</file>
+        </group>
+    </open-files>
+</project-private>

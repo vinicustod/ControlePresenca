@@ -2,29 +2,25 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group/>
         <group name="Engenharia de Software">
-            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/communication/server/ServerCommunication.java</file>
-            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/view/FormEvento.java</file>
-            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/view/FormPresenca.java</file>
-            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/VO/Aluno.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/META-INF/persistence.xml</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/view/FormAluno.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/VO/Evento.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/communication/client/ClientCommunication.java</file>
             <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/VO/VOHelper.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/persistence/EventoDB.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/communication/server/ServerCommunication.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/view/FormLogin.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/communication/server/ServerManager.java</file>
             <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/persistence/DBUtil.java</file>
-        </group>
-        <group>
-            <file>file:/Users/lucasfernandes/ControlePresenca_/ControleDePresenca/src/VO/VOHelper.java</file>
-            <file>file:/Users/lucasfernandes/ControlePresenca_/ControleDePresenca/src/view/FormServidor.java</file>
-            <file>file:/Users/lucasfernandes/ControlePresenca_/ControleDePresenca/src/VO/Evento.java</file>
-            <file>file:/Users/lucasfernandes/ControlePresenca_/ControleDePresenca/src/view/FormAluno.java</file>
-            <file>file:/Users/lucasfernandes/ControlePresenca_/ControleDePresenca/src/VO/Presenca.java</file>
-            <file>file:/Users/lucasfernandes/ControlePresenca_/ControleDePresenca/src/view/FormMenu.java</file>
-            <file>file:/Users/lucasfernandes/ControlePresenca_/ControleDePresenca/src/communication/server/ServerCommunication.java</file>
-            <file>file:/Users/lucasfernandes/ControlePresenca_/ControleDePresenca/src/view/FormPresenca.java</file>
-            <file>file:/Users/lucasfernandes/ControlePresenca_/ControleDePresenca/src/VO/Aluno.java</file>
-            <file>file:/Users/lucasfernandes/ControlePresenca_/ControleDePresenca/src/communication/client/ClientCommunication.java</file>
-            <file>file:/Users/lucasfernandes/ControlePresenca_/ControleDePresenca/src/persistence/PresencaDB.java</file>
-            <file>file:/Users/lucasfernandes/ControlePresenca_/ControleDePresenca/src/persistence/EventoDB.java</file>
-            <file>file:/Users/lucasfernandes/ControlePresenca_/ControleDePresenca/src/view/FormLogin.java</file>
-            <file>file:/Users/lucasfernandes/ControlePresenca_/ControleDePresenca/src/persistence/AlunoDB.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/VO/Aluno.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/communication/client/Session.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/persistence/PresencaDB.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/persistence/AlunoDB.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/view/FormEvento.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/persistence/UsuarioDB.java</file>
+            <file>file:/Users/viniciuscustodio/GitHub/ControlePresenca/ControleDePresenca/src/VO/Presenca.java</file>
         </group>
     </open-files>
 </project-private>

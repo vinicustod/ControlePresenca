@@ -418,6 +418,7 @@ public class FormPresenca extends javax.swing.JFrame {
         Object selected = jcbEvents.getSelectedItem();
         if (selected != null) {
             if (!selected.equals("")) {
+                client.setWaitingRequest(this);
                 client.sendMessage("33;" + ((Evento) selected).getIdEvento());
             }
         }

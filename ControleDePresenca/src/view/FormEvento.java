@@ -49,7 +49,7 @@ public class FormEvento extends javax.swing.JFrame {
     }
     
     private void updateTable(){
-        //System.out.println("FormEvento atualizando");
+        client.setWaitingRequest(this);
         client.sendMessage("17");
     }
     

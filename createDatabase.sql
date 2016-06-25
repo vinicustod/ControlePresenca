@@ -1,11 +1,8 @@
--- MySQL dump 10.13  Distrib 5.6.24, for osx10.8 (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.9, for osx10.9 (x86_64)
 --
--- Host: 127.0.0.1    Database: bancosd
+-- Host: localhost    Database: bancosd
 -- ------------------------------------------------------
--- Server version	5.6.27
-
-create database IF not Exists bancosd;
-use bancosd;
+-- Server version	5.7.12
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -21,6 +18,9 @@ use bancosd;
 --
 -- Table structure for table `Evento`
 --
+Drop schema if exists bancosd;
+create schema if not exists bancosd;
+use bancosd;
 
 DROP TABLE IF EXISTS `Evento`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -42,7 +42,7 @@ CREATE TABLE `Evento` (
 
 LOCK TABLES `Evento` WRITE;
 /*!40000 ALTER TABLE `Evento` DISABLE KEYS */;
-INSERT INTO `Evento` VALUES (251,'Vinicius','Palestra','10:00','12:00','10/10/2000'),(603,'Evento 1','Oficina','12:00','14:00','12/11/2016'),(604,'Evento 2','Minicurso','13:00','18:00','12/11/2015');
+INSERT INTO `Evento` VALUES (251,'Vinicius','Palestra','10:00','12:00','10/10/2000'),(603,'Evento 1','Oficina','12:00','14:00','12/11/2016'),(604,'Evento 2','Mesa Redonda','13:00','18:00','12/11/2015');
 /*!40000 ALTER TABLE `Evento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -68,6 +68,36 @@ CREATE TABLE `Matricula` (
 LOCK TABLES `Matricula` WRITE;
 /*!40000 ALTER TABLE `Matricula` DISABLE KEYS */;
 /*!40000 ALTER TABLE `Matricula` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `PRESENCA`
+--
+
+DROP TABLE IF EXISTS `PRESENCA`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `PRESENCA` (
+  `IDPRESENCA` int(11) NOT NULL,
+  `PRESENTE` tinyint(1) DEFAULT '0',
+  `ALUNO_IDALUNO` int(11) DEFAULT NULL,
+  `EVENTO_IDEVENTO` int(11) DEFAULT NULL,
+  PRIMARY KEY (`IDPRESENCA`),
+  KEY `fk_presenca_aluno_idx` (`ALUNO_IDALUNO`),
+  KEY `fk_presenca_evento_idx` (`EVENTO_IDEVENTO`),
+  CONSTRAINT `fk_presenca_aluno` FOREIGN KEY (`ALUNO_IDALUNO`) REFERENCES `aluno` (`idAluno`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `fk_presenca_evento` FOREIGN KEY (`EVENTO_IDEVENTO`) REFERENCES `Evento` (`idEvento`) ON DELETE NO ACTION ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `PRESENCA`
+--
+
+LOCK TABLES `PRESENCA` WRITE;
+/*!40000 ALTER TABLE `PRESENCA` DISABLE KEYS */;
+INSERT INTO `PRESENCA` VALUES (701,0,152,251),(751,0,551,251),(752,0,601,251);
+/*!40000 ALTER TABLE `PRESENCA` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -113,7 +143,7 @@ CREATE TABLE `SEQUENCE` (
 
 LOCK TABLES `SEQUENCE` WRITE;
 /*!40000 ALTER TABLE `SEQUENCE` DISABLE KEYS */;
-INSERT INTO `SEQUENCE` VALUES ('SEQ_GEN',650);
+INSERT INTO `SEQUENCE` VALUES ('SEQ_GEN',800);
 /*!40000 ALTER TABLE `SEQUENCE` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -220,7 +250,7 @@ CREATE TABLE `aluno` (
 
 LOCK TABLES `aluno` WRITE;
 /*!40000 ALTER TABLE `aluno` DISABLE KEYS */;
-INSERT INTO `aluno` VALUES (152,1372475,'Vinicius Custodio','Engenharia Civil',7,'vinihcius.custodio@gmail.com','(42) 8425-9609'),(551,1372475,'Lucas Emanuel','Engenharia Mecânica',1,'vinihcius.custodio@gmail.com','(42) 8425-9609'),(601,1372475,'Marielly F. L.','Ciência da Computação',10,'vinihcius.custodio@gmail.com','(42) 8425-9609'),(602,1372475,'Pedro','Ciências Naturais',3,'pedro@hotmail.com','(42) 8425-9609');
+INSERT INTO `aluno` VALUES (152,1372475,'Vinicius Custodio','Engenharia Civil',7,'vinihcius.custodio@gmail.com','(42) 8425-9609'),(551,1372475,'Lucas Emanuel','Engenharia Mecânica',1,'vinihcius.custodio@gmail.com','(42) 8425-9609'),(601,1372475,'Marielly F. L.','Ciência da Computação',10,'vinihcius.custodio@gmail.com','(42) 8425-9609'),(602,1372475,'Pedro Who?','Ciências Naturais',3,'pedro@hotmail.com','(42) 8425-9609');
 /*!40000 ALTER TABLE `aluno` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -233,4 +263,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-05-30 13:55:09
+-- Dump completed on 2016-06-13 20:08:26

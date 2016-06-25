@@ -21,14 +21,15 @@ import view.FormAluno;
 import view.FormEvento;
 import view.FormMenu;
 import view.FormPresenca;
+import view.FormSorteio;
 
 // Devo ser
 public class ClientCommunication extends Thread implements Observer {
 
 //    static DataInputStream in;                  // cria um duto de entrada
     BufferedReader in;
-    static PrintStream out;                     // cria um duto de saída
-    static String message;
+    PrintStream out;                     // cria um duto de saída
+    String message;
     Socket ClientSocket = null;
     int serverPort;
     String ipServer;
@@ -57,15 +58,17 @@ public class ClientCommunication extends Thread implements Observer {
         while (true) {
             try {
                 message = in.readLine();
-                System.out.println(message);
+                if (FormMenu.menu != null) {
+                    FormMenu.menu.communicationMessage(message, "recebida");
+                } else {
+                    System.out.println("Mensagem recebida: " + message);
+                }
+
                 if (message == null) {
-
-                    // Alert to the observers that the session is over
-                    this.session.setConnection(false);
-
-                    ClientSocket = null;
-                    iCliente.setCliente(null);
-                    this.stop();
+                    System.out.println("null received");
+                    FormLogin.login.connectionErrorMessage();
+                    closeAllFormsOpenLogin();
+                    this.closeConnection();
                 } else {
                     analyzeMessage(message.split("\\|"));
                 }
@@ -80,11 +83,9 @@ public class ClientCommunication extends Thread implements Observer {
 
     public int closeConnection() {
         try {
-
-            this.session.setConnection(false);
-
             ClientSocket.close();
             ClientSocket = null;
+            FormLogin.login.connectionProblem();
             this.stop();
         } catch (IOException ex) {
             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
@@ -110,14 +111,20 @@ public class ClientCommunication extends Thread implements Observer {
             } catch (UnknownHostException e) {
                 System.err.println("Host desconhecido: ");
                 ClientSocket = null;
+                FormLogin.login.connectionErrorMessage();
+
                 return false;
             } catch (IOException e) {
                 System.err.println("IP ou Porta não existe ");
                 ClientSocket = null;
+                FormLogin.login.connectionErrorMessage();
+
                 return false;
             } catch (Exception e) {
                 System.out.println("Falha na conexão com o servidor");
                 ClientSocket = null;
+                FormLogin.login.connectionErrorMessage();
+
                 return false;
             }
         }
@@ -127,10 +134,14 @@ public class ClientCommunication extends Thread implements Observer {
     public void sendMessage(String message) {
         try {
             out.println(message);
-            System.out.println("mensagem enviada  " + message);
-
+            if (FormMenu.menu != null) {
+                FormMenu.menu.communicationMessage(message, "enviada");
+            } else {
+                System.out.println("Mensagem enviada: " + message);
+            }
         } catch (Exception ex) {
             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
+            this.closeConnection();
         }
 
     }
@@ -146,10 +157,9 @@ public class ClientCommunication extends Thread implements Observer {
 
     private void analyzeMessage(String[] message) {
         System.out.println("analyze: " + message.length);
-        if("34".equals(message[0])) {
+        if ("34".equals(message[0])) {
             listStudentsforPresencaResponse(message);
-        }
-        else if (message.length == 1) {
+        } else if (message.length == 1) {
 
             String[] splitMessage = message[0].split(";");
             if ("02".equals(splitMessage[0])) {
@@ -168,7 +178,7 @@ public class ClientCommunication extends Thread implements Observer {
                 queryStudentResponse(splitMessage, "delete");
             } else if ("00".equals(splitMessage[0])) {
                 System.out.println("Erro: " + splitMessage[1]);
-            } else if("32".equals(splitMessage[0])){
+            } else if ("32".equals(splitMessage[0])) {
                 presencaResponse(splitMessage);
             }
 
@@ -176,7 +186,7 @@ public class ClientCommunication extends Thread implements Observer {
             listEventsResponse(message);
         } else if ("28".equals(message[0])) {
             listStudentsResponse(message);
-        } 
+        }
     }
 
     private void loginResponse(String[] message) {
@@ -211,10 +221,20 @@ public class ClientCommunication extends Thread implements Observer {
             Evento e = VOHelper.createEvento(Long.parseLong(event[0]), event[1], event[2], event[3], event[4], event[5]);
             eventos.add(e);
         }
-        if(!isRequested()){
-            FormEvento.evento.setInTable(eventos);
-        }else{
-            FormPresenca.presenca.setEventosInTable(eventos);
+        for (JFrame form : this.waitingRequest) {
+            if (form instanceof FormEvento) {
+                FormEvento.evento.setInTable(eventos);
+                waitingRequest.remove(form);
+                return;
+            } else if (form instanceof FormPresenca) {
+                FormPresenca.presenca.setEventosInTable(eventos);
+                waitingRequest.remove(form);
+                return;
+            } else if (form instanceof FormSorteio) {
+                FormSorteio.sorteio.setEventosInTable(eventos);
+                waitingRequest.remove(form);
+                return;
+            }
         }
 
     }
@@ -248,32 +268,47 @@ public class ClientCommunication extends Thread implements Observer {
         }
         return false;
     }
+
     private void listStudentsforPresencaResponse(String[] message) {
         ArrayList<Aluno> alunos = new ArrayList();
-        
+
         for (int i = 1; i < message.length; i++) {
             String[] student = message[i].split(";");
             Aluno e = VOHelper.createStudent(Long.parseLong(student[0]), student[1], student[2], student[3], student[4], student[5], student[6]);
             alunos.add(e);
         }
-       
-            FormPresenca.presenca.setAlunosInTablePresenca(alunos);
-        
+        for (JFrame form : this.waitingRequest) {
+            if (form instanceof FormPresenca) {
+                FormPresenca.presenca.setAlunosInTablePresenca(alunos);
+                this.waitingRequest.remove(form);
+                return;
+            } else if (form instanceof FormSorteio) {
+                FormSorteio.sorteio.setAlunosInTableSorteio(alunos);
+                this.waitingRequest.remove(form);
+                return;
+            }
+        }
     }
-    
+
     private void listStudentsResponse(String[] message) {
         ArrayList<Aluno> alunos = new ArrayList();
-        
+
         for (int i = 1; i < message.length; i++) {
             String[] student = message[i].split(";");
             Aluno e = VOHelper.createStudent(Long.parseLong(student[0]), student[1], student[2], student[3], student[4], student[5], student[6]);
             alunos.add(e);
         }
-        if(!isRequested()){
-            FormAluno.aluno.setInTable(alunos);
-        }else{
-            FormPresenca.presenca.setAlunos(alunos);
-            FormPresenca.presenca.setAlunosInTable();
+        for (JFrame form : this.waitingRequest) {
+            if (form instanceof FormAluno) {
+                FormAluno.aluno.setInTable(alunos);
+                waitingRequest.remove(form);
+                return;
+            } else if (form instanceof FormPresenca) {
+                FormPresenca.presenca.setAlunos(alunos);
+                FormPresenca.presenca.setAlunosInTable();
+                waitingRequest.remove(form);
+                return;
+            }
         }
     }
 
@@ -286,5 +321,25 @@ public class ClientCommunication extends Thread implements Observer {
                 FormPresenca.warning(false);
             }
         }
+    }
+
+    private void closeAllFormsOpenLogin() {
+        if (FormAluno.aluno != null) {
+            FormAluno.aluno.setVisible(false);
+        }
+        if (FormEvento.evento != null) {
+            FormEvento.evento.setVisible(false);
+        }
+        if (FormMenu.menu != null) {
+            FormMenu.menu.setVisible(false);
+        }
+        if (FormPresenca.presenca != null) {
+            FormPresenca.presenca.setVisible(false);
+        }
+        if (FormSorteio.sorteio != null) {
+            FormSorteio.sorteio.setVisible(false);
+        }
+
+        FormLogin.createLogin();
     }
 }

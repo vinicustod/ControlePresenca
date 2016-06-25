@@ -61,6 +61,7 @@ public class FormAluno extends javax.swing.JFrame {
     }
 
     public void updateTable() {
+        client.setWaitingRequest(aluno);
         client.sendMessage("27");
     }
 

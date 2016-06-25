@@ -6,8 +6,8 @@ Equipe:
 0. Descompactar o projeto.
 
 1. Criar banco de dados utilizando o script: createDatabase.sql
-	Obs.: O banco de dados possui algumas informações em Aluno e Evento
-	Obs. 2: O banco está configurado com usuário (usuário) e senha (senha) para login na aplicação .
+	Obs.: O banco de dados possui algumas informações em Aluno, Evento e em Presença
+	Obs. 2: O banco está configurado com usuário (usuario) e senha (senha) para login na aplicação .
 	Obs. 3: Foi removido a senha de usuário root dentro do MYSQL. Sendo assim não há mais necessidade do MySQL ser configurado com senha.
 
 2. As libraries foram removidas para que o projeto fosse enviado pelo moodle, sendo assim necessário a inclusão de tais. Caso seja feita a utilização dos netbeans, so ir nas “properties do projeto >> libraries >> Add Library >> Import” e adicione as seguintes libraries: 	
@@ -22,6 +22,6 @@ Equipe:
 4. Executar o projeto
 	4.1 Executar o FormServidor localizado em no pacote view e clicar em Abrir Servidor.
 	4.2 Executar o FormLogin localizado tambem no pacote view, clica em conectar (As informações necessárias ja estarem preenchidas)
-	Obs.: Note que apos clicar em conectar no FormLogin sera aberto um menu que possui duas opções (Evento e Aluno), escolha a opção desejada.
+	Obs.: Note que apos clicar em conectar no FormLogin sera aberto um menu que possui duas opções (Evento, Aluno e Presenca), escolha a opção desejada.
 
 5. Apos realizar os testes desejados utilize o script destroyDatabase.sql para destruir o banco de dados

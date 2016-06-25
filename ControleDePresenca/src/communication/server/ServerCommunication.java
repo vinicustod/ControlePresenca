@@ -63,11 +63,14 @@ public class ServerCommunication extends Thread {
             while (true) {
                 //aguarda recebimento de dados vindos do cliente
                 message = dutoEntrada.readLine();                           // recebe dados do cliente
-                iServer.getJtMessage().setText(iServer.getJtMessage().getText() + "\n" + message);
+                if(message != null)
+                    iServer.messageReceive(message, "recebida");
                 //System.out.println(message);
                 if (message == null) {
                     iServer.getJtMessage().setText(iServer.getJtMessage().getText() + "\n"
                             + "Cliente: " + socketCliente.getInetAddress().toString() + ":" + socketCliente.getPort() + " desconectou.");
+                    iServer.getJtMessage().setCaretPosition(iServer.getJtMessage().getDocument().getLength());
+
                     socketCliente.close();
                     this.stop();
                 } else {
@@ -219,11 +222,10 @@ public class ServerCommunication extends Thread {
 
     private void loginRequest(String[] message) {
         if (message.length == 3) {
-            Usuario u = UsuarioDB.selectUser(message[1], message[2]);
-            System.out.println("ID user: " + u.getIdUsuario());
             if (UsuarioDB.selectUser(message[1], message[2]) != null) {
                 dutoSaida.println("02;1");
             } else {
+                System.out.println("aqui");
                 dutoSaida.println("02;0");
             }
         } else {
@@ -251,14 +253,14 @@ public class ServerCommunication extends Thread {
     }
 
     private void createStudentList() {
-        String listEventsString = "28";
+        String listAlunosString = "28";
         List<Aluno> alunos = AlunoDB.selectProducts();
         for (Aluno a : alunos) {
             String evento = a.getIdAluno() + ";" + a.getRa() + ";" + a.getNome() + ";" + a.getCurso() + ";" + a.getPeriodo() + ";" + a.getEmail() + ";" + a.getTelefone();
-            listEventsString = listEventsString + "|" + evento;
+            listAlunosString = listAlunosString + "|" + evento;
         }
         //System.out.println(listEventsString);
-        dutoSaida.println(listEventsString);
+        dutoSaida.println(listAlunosString);
     }
 
     private void alterStudentRequest(String[] message) {

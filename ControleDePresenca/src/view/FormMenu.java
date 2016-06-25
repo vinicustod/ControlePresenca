@@ -14,30 +14,47 @@ import java.util.Observer;
  *
  * @author viniciuscustodio
  */
-public class FormMenu extends javax.swing.JFrame implements Observer{
-    private static FormMenu menu = null;    
+public class FormMenu extends javax.swing.JFrame implements Observer {
+
+    public static FormMenu menu = null;
     private Session session;
     ClientCommunication client = null;
-    
-    public static void createMenu(Session session, ClientCommunication client){
-        if(menu == null){
+
+    public static void createMenu(Session session, ClientCommunication client) {
+        if (menu == null) {
             menu = new FormMenu();
-            menu.client = client;
         }
+        menu.client = client;
+
         System.out.println("menu visivel");
         menu.setVisible(true);
         menu.session = session;
         // Add this object to the list of Observer of session - Check to not duplicate
         menu.session.deleteObserver(menu);
         menu.session.addObserver(menu);
-        
+
         session.setConnection(true);
     }
+
+    public void communicationMessage(String message, String type) {
+        if (type.equals("recebida")) {
+            jTextArea1.setText(jTextArea1.getText() + "\nMensagem recebida: "
+                    + message);
+        } else {
+            jTextArea1.setText(jTextArea1.getText() + "\nMensagem enviada: "
+                    + message);
+        }
+        jTextArea1.setCaretPosition(jTextArea1.getDocument().getLength());
+
+    }
+
     /**
      * Creates new form InterfaceMenu
      */
     public FormMenu() {
         initComponents();
+        jTextArea1.setWrapStyleWord(true);
+        jTextArea1.setLineWrap(true);
     }
 
     /**
@@ -52,6 +69,10 @@ public class FormMenu extends javax.swing.JFrame implements Observer{
         jButton1 = new javax.swing.JButton();
         jbAluno = new javax.swing.JButton();
         bPresenca = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -76,28 +97,57 @@ public class FormMenu extends javax.swing.JFrame implements Observer{
             }
         });
 
+        jButton2.setText("Sorteio");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
+
+        jLabel1.setText("Messages:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(bPresenca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jbAluno, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addComponent(jbAluno)
-                    .addComponent(bPresenca))
-                .addContainerGap(295, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(jButton1)
-                .addGap(18, 18, 18)
-                .addComponent(jbAluno)
-                .addGap(18, 18, 18)
-                .addComponent(bPresenca)
-                .addContainerGap(156, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jbAluno)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(bPresenca)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         pack();
@@ -116,6 +166,11 @@ public class FormMenu extends javax.swing.JFrame implements Observer{
         FormPresenca.createPresenca(client);
         // TODO add your handling code here:
     }//GEN-LAST:event_bPresencaActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        FormSorteio.createFormSorteio(client);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -156,9 +211,8 @@ public class FormMenu extends javax.swing.JFrame implements Observer{
     // The current session was updated 
     @Override
     public void update(Observable o, Object arg) {
-        
-        // Verify if the updated Observable class is Session
 
+        // Verify if the updated Observable class is Session
         Session newSession = (Session) o;
         //System.out.println("FormMenu Update " + newSession.isConnection());
 
@@ -167,6 +221,10 @@ public class FormMenu extends javax.swing.JFrame implements Observer{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton bPresenca;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JButton jbAluno;
     // End of variables declaration//GEN-END:variables
 }

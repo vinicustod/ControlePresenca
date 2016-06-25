@@ -1,6 +1,5 @@
 package view;
 
-
 import communication.server.ServerManager;
 import java.awt.Color;
 import java.io.IOException;
@@ -25,6 +24,17 @@ public class FormServidor extends javax.swing.JFrame {
      */
     public FormServidor() {
         initComponents();
+
+    }
+
+    public void messageReceive(String message, String type) {
+        if (type.equals("recebida")) {
+            jtMessage.setText(jtMessage.getText() + "Mensagem recebida: " + message + "\n");
+        } else {
+            jtMessage.setText(jtMessage.getText() + "Mensagem enviada: " + message + "\n");
+        }
+        jtMessage.setCaretPosition(jtMessage.getDocument().getLength());
+
     }
 
     /**

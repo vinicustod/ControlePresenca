@@ -23,12 +23,16 @@ public class FormLogin extends javax.swing.JFrame {
         if(login == null){
             login = new FormLogin();
         }
+        login.cliente = null;
         login.setVisible(true);
         
     }
     
     private ClientCommunication cliente;
 
+    public void connectionProblem(){
+        cliente = null;
+    }
     /**
      * Creates new form InterfaceCliente
      */
@@ -254,5 +258,9 @@ public class FormLogin extends javax.swing.JFrame {
 
     public void setCliente(ClientCommunication cliente) {
         this.cliente = cliente;
+    }
+
+    public void connectionErrorMessage() {
+        JOptionPane.showMessageDialog(null, "Erro servidor indisponível", "Erro", JOptionPane.ERROR_MESSAGE);
     }
 }
